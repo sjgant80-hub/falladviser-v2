@@ -1,0 +1,2667 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>£ FallAdviser v2 · sovereign multi-client UK financial advice · tax · pension · portfolio · suitability</title>
+<meta name="description" content="Sovereign multi-client UK financial-advice tool for IFA firms. Multi-adviser, multi-client, scenarios, suitability, CGT lots, Bed&ISA, withdrawal sequencing, marriage allowance, HICBC, carry-forward, tapered AA, BPR/APR, Scotland bands. Informational, not regulated advice.">
+<meta name="prime" content="719">
+<meta name="version" content="2.0.0">
+<meta name="theme-color" content="#0b0a0f">
+<link rel="manifest" href='data:application/manifest+json,{"name":"FallAdviser v2","short_name":"adviser2","start_url":"./","display":"standalone","background_color":"%230b0a0f","theme_color":"%23b8974a","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 192 192%27><rect width=%27192%27 height=%27192%27 fill=%27%230b0a0f%27 rx=%2828%27/><text x=%2796%27 y=%27138%27 font-family=%27Georgia, serif%27 font-size=%27124%27 font-weight=%27700%27 text-anchor=%27middle%27 fill=%27%23b8974a%27>£</text></svg>","sizes":"192x192","type":"image/svg+xml"}]}'>
+<style>
+:root{
+  --void:#0b0a0f;--void-2:#13121a;--ink:#1a1922;--ink-2:#22212c;
+  --line:#2a2934;--line-soft:#1f1e28;
+  --cream:#e6e1d6;--cream-dim:#a8a395;--cream-muted:#6e6a5e;
+  --brass:#b8974a;--amber:#ff8c00;--ox:#8b1a1a;
+  --green:#4ade80;--red:#ef4444;--blue:#60a5fa;--yellow:#fbbf24;--knowledge:#3F6C8E;
+  --serif:Georgia,'Libre Baskerville',ui-serif,serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'IBM Plex Mono','SF Mono',ui-monospace,Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--void);color:var(--cream);font:14px/1.55 var(--sans);min-height:100dvh;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;background:transparent;border:none;color:inherit}
+input,textarea,select{font-family:inherit;background:var(--ink);border:1px solid var(--line);color:var(--cream);border-radius:3px;padding:7px 10px;outline:none;font-size:13px}
+input:focus,textarea:focus,select:focus{border-color:var(--brass)}
+input[type=number]{font-family:var(--mono)}
+a{color:var(--brass)}a:hover{color:var(--amber)}
+
+.app{min-height:100dvh;display:grid;grid-template-rows:48px 1fr}
+header{display:flex;align-items:center;border-bottom:1px solid var(--line);background:var(--void-2);user-select:none}
+.brand{display:flex;align-items:center;gap:10px;padding:0 16px;height:100%;border-right:1px solid var(--line)}
+.brand .mark{width:28px;height:28px;background:linear-gradient(135deg,var(--brass),var(--amber));border-radius:5px;display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:16px;color:var(--void)}
+.brand .name{font-family:var(--serif);font-weight:600;font-size:14px;letter-spacing:0.02em}
+.brand .seal{font-family:var(--mono);font-size:9px;color:var(--cream-muted);letter-spacing:0.18em;text-transform:uppercase}
+
+.client-pill{display:flex;align-items:center;gap:8px;padding:0 14px;height:100%;border-right:1px solid var(--line);cursor:pointer;font-size:12px;color:var(--cream-dim)}
+.client-pill:hover{background:var(--ink);color:var(--cream)}
+.client-pill .who{font-family:var(--serif);font-size:13px;color:var(--brass)}
+.client-pill .meta{font-family:var(--mono);font-size:9px;color:var(--cream-muted);letter-spacing:0.1em;text-transform:uppercase}
+
+nav.tabs{display:flex;flex:1;overflow-x:auto;align-items:stretch}
+nav.tabs button{padding:0 14px;font-size:12px;color:var(--cream-dim);letter-spacing:0.04em;display:flex;align-items:center;gap:6px;border-right:1px solid var(--line-soft);height:100%;white-space:nowrap;border-top:2px solid transparent}
+nav.tabs button:hover{background:var(--ink);color:var(--cream)}
+nav.tabs button.active{background:var(--ink);color:var(--brass);border-top-color:var(--brass)}
+
+.tools-r{display:flex;align-items:center;gap:5px;padding:0 14px;height:100%;border-left:1px solid var(--line)}
+.tool-btn{padding:5px 11px;border-radius:3px;font-size:11px;color:var(--cream-dim);letter-spacing:0.06em;text-transform:uppercase;font-family:var(--mono);border:1px solid var(--line)}
+.tool-btn:hover{background:var(--ink);color:var(--cream);border-color:var(--brass)}
+.tool-btn.primary{background:var(--brass);color:var(--void);border-color:var(--brass);font-weight:600}
+.tool-btn.primary:hover{background:var(--amber);border-color:var(--amber)}
+.tool-btn.t3{border-color:var(--blue);color:var(--blue)}
+
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100dvh - 48px)}
+aside.sidebar{background:var(--void-2);border-right:1px solid var(--line);overflow-y:auto;padding:14px 12px 60px;display:flex;flex-direction:column;gap:10px}
+.sidebar h4{font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;padding:0 4px}
+.sidebar-search{display:flex;flex-direction:column;gap:6px}
+.sidebar-search input,.sidebar-search select{font-size:12px;padding:6px 8px}
+.client-list{display:flex;flex-direction:column;gap:3px}
+.client-card{padding:9px 11px;border-radius:3px;cursor:pointer;border:1px solid transparent;border-left:3px solid var(--line);background:var(--ink);transition:all 0.1s}
+.client-card:hover{background:var(--ink-2);border-left-color:var(--brass)}
+.client-card.active{background:var(--ink-2);border-left-color:var(--brass);border-color:var(--line)}
+.client-card .nm{font-family:var(--serif);font-size:13px;color:var(--cream);font-weight:600}
+.client-card .sub{font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.06em;margin-top:2px;display:flex;gap:6px;flex-wrap:wrap}
+.client-card .sub .tag{padding:1px 5px;border-radius:2px;background:var(--void);color:var(--cream-dim);font-size:9px}
+.client-card .sub .tag.due{background:var(--ox);color:var(--cream)}
+.client-card .sub .tag.atr{color:var(--brass);border:1px solid var(--line)}
+.empty-state{padding:18px;text-align:center;color:var(--cream-muted);font-size:12px;font-style:italic}
+
+main{padding:18px 22px 60px;overflow-y:auto;max-width:1240px;margin:0 auto;width:100%}
+
+.disclaimer{background:rgba(139,26,26,0.15);border:1px solid var(--ox);border-left:3px solid var(--ox);border-radius:3px;padding:12px 16px;margin-bottom:18px;font-size:12px;color:var(--cream)}
+.disclaimer strong{color:var(--brass)}
+
+.section-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;gap:14px;flex-wrap:wrap}
+.section-h h2{font-family:var(--serif);font-size:18px;font-weight:600;letter-spacing:0.01em}
+.section-h .sub{font-family:var(--mono);font-size:11px;color:var(--cream-muted);letter-spacing:0.08em;text-transform:uppercase}
+.section-h .actions{display:flex;gap:6px;flex-wrap:wrap}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{background:var(--void-2);border:1px solid var(--line);border-radius:4px;padding:16px 18px}
+.card h3{font-family:var(--serif);font-size:14px;font-weight:600;margin-bottom:10px;color:var(--cream);letter-spacing:0.01em}
+.card h3 .meta{font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:0.1em;margin-left:8px}
+
+.kpi{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--line-soft);font-size:13px}
+.kpi:last-child{border-bottom:none}
+.kpi .l{color:var(--cream-dim)}
+.kpi .v{font-family:var(--mono);color:var(--cream);font-weight:500}
+.kpi .v.green{color:var(--green)}.kpi .v.red{color:var(--red)}.kpi .v.amber{color:var(--amber)}.kpi .v.brass{color:var(--brass)}.kpi .v.blue{color:var(--blue)}
+
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.row.r3{grid-template-columns:1fr 1fr 1fr}
+.field label{display:block;font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px}
+.field input,.field select,.field textarea{width:100%}
+.field .hint{font-size:10px;color:var(--cream-muted);margin-top:3px;font-family:var(--mono)}
+
+.btn{padding:7px 14px;border:1px solid var(--brass);border-radius:3px;font-size:12px;color:var(--cream);background:transparent;letter-spacing:0.04em;cursor:pointer}
+.btn:hover{border-color:var(--amber);color:var(--amber)}
+.btn.primary{background:var(--brass);color:var(--void);border-color:var(--brass);font-weight:600}
+.btn.primary:hover{background:var(--amber);border-color:var(--amber);color:var(--void)}
+.btn.danger{border-color:var(--ox);color:var(--ox)}
+.btn.danger:hover{border-color:var(--red);color:var(--red);background:rgba(239,68,68,0.08)}
+.btn.sm{padding:4px 9px;font-size:11px}
+.btn.ghost{border-color:var(--line);color:var(--cream-dim)}
+.btn.ghost:hover{border-color:var(--brass);color:var(--brass)}
+
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line-soft);text-align:left}
+th{color:var(--brass);font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600}
+td.r{text-align:right;font-family:var(--mono)}
+tr.total td{font-weight:600;border-top:1px solid var(--brass);border-bottom:none;padding-top:10px}
+tr.total td.r{color:var(--brass)}
+tr.clickable{cursor:pointer}
+tr.clickable:hover{background:var(--ink)}
+
+.bar{height:6px;background:var(--ink);border-radius:3px;overflow:hidden;margin:6px 0}
+.bar > div{height:100%;background:var(--brass);transition:width 0.3s}
+.bar > div.green{background:var(--green)}.bar > div.red{background:var(--red)}.bar > div.amber{background:var(--amber)}.bar > div.blue{background:var(--blue)}
+
+.tag{display:inline-block;padding:2px 7px;border-radius:11px;font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;border:1px solid var(--brass);color:var(--brass);margin-right:4px}
+.tag.amber{border-color:var(--amber);color:var(--amber)}
+.tag.green{border-color:var(--green);color:var(--green)}
+.tag.red{border-color:var(--red);color:var(--red)}
+.tag.blue{border-color:var(--blue);color:var(--blue)}
+.tag.dim{border-color:var(--line);color:var(--cream-muted)}
+
+.chat{display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow-y:auto;padding:6px}
+.msg{padding:10px 14px;border-radius:6px;max-width:88%;font-size:13px;line-height:1.55;white-space:pre-wrap}
+.msg.user{background:var(--ink);align-self:flex-end;border-bottom-right-radius:2px}
+.msg.bot{background:var(--void-2);border:1px solid var(--line);border-left:2px solid var(--brass);align-self:flex-start;border-bottom-left-radius:2px}
+.msg.bot .src{font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.08em;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+.chat-input{display:flex;gap:8px;margin-top:10px}
+.chat-input input{flex:1;padding:11px 14px}
+
+.sug{padding:10px 13px;background:var(--ink);border-radius:3px;border-left:3px solid var(--brass);margin-bottom:6px;font-size:13px}
+.sug .prio{font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px}
+.sug.high{border-left-color:var(--green)}.sug.high .prio{color:var(--green)}
+.sug.med{border-left-color:var(--amber)}.sug.med .prio{color:var(--amber)}
+.sug.low{border-left-color:var(--cream-dim)}
+.sug .why{font-size:11px;color:var(--cream-dim);margin-top:4px;font-style:italic}
+
+.hold-row{display:grid;grid-template-columns:1.4fr 0.9fr 1fr 1fr 0.9fr 0.9fr 32px;gap:6px;padding:7px 0;border-bottom:1px solid var(--line-soft);align-items:center}
+.hold-row.head{font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+.hold-row input,.hold-row select{padding:5px 7px;font-size:12px;width:100%}
+.hold-row .x{cursor:pointer;color:var(--cream-muted);font-family:var(--mono);text-align:center}
+.hold-row .x:hover{color:var(--red)}
+
+.lot-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 32px;gap:6px;padding:5px 0;border-bottom:1px dashed var(--line-soft);align-items:center;font-size:12px}
+.lot-row.head{font-family:var(--mono);font-size:9px;color:var(--brass);letter-spacing:0.08em;text-transform:uppercase}
+
+.palette-bg,.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:flex-start;justify-content:center;padding-top:14vh;z-index:900;backdrop-filter:blur(4px)}
+.palette-bg.open,.modal-bg.open{display:flex}
+.modal-bg{align-items:center;padding:18px}
+.palette{background:var(--void-2);border:1px solid var(--brass);border-radius:5px;width:min(640px,90%);box-shadow:0 18px 50px rgba(0,0,0,0.7);overflow:hidden}
+.palette-hd{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.palette-hd .glyph{font-family:var(--serif);font-size:18px;color:var(--brass)}
+.palette-hd input{flex:1;border:none;background:transparent;font-size:15px;padding:4px}
+.palette-bd{max-height:50vh;overflow:auto;padding:8px}
+.palette-row{padding:9px 12px;border-radius:3px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px}
+.palette-row:hover{background:var(--ink)}
+.modal{background:var(--void-2);border:1px solid var(--brass);border-radius:4px;padding:22px;max-width:680px;width:100%;max-height:90vh;overflow:auto}
+.modal h2{font-family:var(--serif);font-size:17px;margin-bottom:14px}
+.modal .actions{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--brass);color:var(--void);padding:9px 18px;border-radius:3px;font-family:var(--mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;opacity:0;transition:all 0.22s;z-index:1100;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.onboard{max-width:580px;margin:5vh auto;padding:36px 32px;background:var(--void-2);border:1px solid var(--brass);border-radius:6px}
+.onboard h1{font-family:var(--serif);font-size:28px;color:var(--brass);margin-bottom:6px}
+.onboard .lead{color:var(--cream-dim);margin-bottom:20px;font-size:13px}
+.onboard .step{font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:8px}
+
+.likert{display:flex;gap:4px;margin-top:6px}
+.likert button{flex:1;padding:7px;border:1px solid var(--line);border-radius:3px;font-size:11px;color:var(--cream-dim)}
+.likert button:hover{border-color:var(--brass);color:var(--cream)}
+.likert button.sel{background:var(--brass);color:var(--void);border-color:var(--brass);font-weight:600}
+
+.scen-card{padding:12px 14px;background:var(--ink);border-radius:3px;border-left:3px solid var(--brass);margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.scen-card:hover{background:var(--ink-2)}
+.scen-card.cmp{border-left-color:var(--blue)}
+.scen-card .nm{font-family:var(--serif);font-size:13px;color:var(--cream);font-weight:600}
+.scen-card .sub{font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.06em;margin-top:3px}
+.scen-card .ops{display:flex;gap:5px}
+
+.drawer-toggle{display:none;padding:0 12px;height:100%;align-items:center;border-right:1px solid var(--line);cursor:pointer;color:var(--brass);font-size:18px}
+
+@media (max-width:880px){
+  .drawer-toggle{display:flex}
+  .layout{grid-template-columns:1fr}
+  aside.sidebar{position:fixed;top:48px;left:-300px;bottom:0;width:280px;z-index:50;transition:left 0.2s;box-shadow:0 0 30px rgba(0,0,0,0.6)}
+  aside.sidebar.open{left:0}
+  nav.tabs button{padding:0 10px;font-size:11px}
+  main{padding:14px 14px 50px}
+  .row,.row.r3{grid-template-columns:1fr}
+  .hold-row{grid-template-columns:1fr 1fr;gap:4px}
+  .hold-row.head{display:none}
+  .brand .seal{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+<header>
+  <button class="drawer-toggle" onclick="toggleDrawer()" title="clients">☰</button>
+  <div class="brand">
+    <div class="mark">£</div>
+    <div>
+      <div class="name">FallAdviser</div>
+      <div class="seal">v2 · prime 719 · IFA</div>
+    </div>
+  </div>
+  <div class="client-pill" id="clientPill" onclick="showApp('clients')" title="active client">
+    <span class="who" id="cpWho">— no client —</span>
+    <span class="meta" id="cpMeta"></span>
+  </div>
+  <nav class="tabs" id="tabNav"></nav>
+  <div class="tools-r">
+    <button class="tool-btn primary" onclick="openPalette()" title="ask · Ctrl+K">◊ ask</button>
+    <button class="tool-btn" id="tierBadge" onclick="openModal('settings')">T0</button>
+    <button class="tool-btn" onclick="openModal('settings')">⚙</button>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-search">
+    <h4>clients <span id="clientCount" style="float:right;color:var(--cream-muted);font-weight:normal"></span></h4>
+    <input type="text" id="clientFilter" placeholder="search name · email · postcode" oninput="renderSidebar()">
+    <div class="row" style="gap:4px;margin:0">
+      <select id="clientFilterAdviser" onchange="renderSidebar()" style="font-size:11px"></select>
+      <select id="clientFilterRisk" onchange="renderSidebar()" style="font-size:11px">
+        <option value="">all risk</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option>
+      </select>
+    </div>
+    <div class="row" style="gap:4px;margin:0">
+      <select id="clientFilterATR" onchange="renderSidebar()" style="font-size:11px">
+        <option value="">all ATR</option>
+        <option value="1">ATR 1</option><option value="2">ATR 2</option><option value="3">ATR 3</option>
+        <option value="4">ATR 4</option><option value="5">ATR 5</option><option value="6">ATR 6</option><option value="7">ATR 7</option>
+      </select>
+      <select id="clientFilterDue" onchange="renderSidebar()" style="font-size:11px">
+        <option value="">all reviews</option><option value="due">due / overdue</option><option value="ok">in window</option>
+      </select>
+    </div>
+    <button class="btn sm primary" onclick="newClient()" style="width:100%;margin-top:4px">+ new client</button>
+  </div>
+  <div class="client-list" id="clientList"></div>
+</aside>
+<main id="view"></main>
+</div>
+</div>
+
+<div class="palette-bg" id="palette">
+  <div class="palette">
+    <div class="palette-hd">
+      <span class="glyph">£</span>
+      <input type="text" id="pInput" placeholder="ask · 'CGT if Alice sells £15k of VWRL · scenarios for Bob · marriage allowance · HICBC at £72k'">
+      <span id="pTier" style="font-family:var(--mono);font-size:10px;color:var(--cream-muted)">T0</span>
+    </div>
+    <div class="palette-bd" id="pBody"></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h2 id="modalTitle">·</h2>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">·</div>
+
+<script>
+'use strict';
+
+// ════════════════════════════════════════════════════════════════
+// FallAdviser v2 · sovereign multi-client UK financial advice
+// prime 719 · v20.4 socket compliant · MIT · 2025-26 tax year
+// IFA-bundle tool · shared client schema · BroadcastChannel mesh
+// INFORMATIONAL · NOT REGULATED FCA ADVICE
+// ════════════════════════════════════════════════════════════════
+const TOOLNAME='falladviser';const VERSION='2.0.0';const PRIME=719;const STORE='falladviser-v2';const CONFIG_V='falladviser@'+VERSION;
+const TAX_YEAR='2025-26';
+
+const RULES={
+  taxYear:TAX_YEAR,
+  personalAllowance:12570,paTaperStart:100000,paTaperEnd:125140,
+  basicRateBand:37700,basicRate:0.20,
+  higherRateStart:50270,higherRate:0.40,
+  additionalRateStart:125140,additionalRate:0.45,
+  scotland:{
+    starterRate:0.19,starterTop:14876,
+    basicRate:0.20,basicTop:26561,
+    intermediateRate:0.21,intermediateTop:43662,
+    higherRate:0.42,higherTop:75000,
+    advancedRate:0.45,advancedTop:125140,
+    topRate:0.48
+  },
+  niPrimaryThreshold:12570,niUpperEarningsLimit:50270,niMainRate:0.08,niUpperRate:0.02,
+  dividendAllowance:500,dividendBasicRate:0.0875,dividendHigherRate:0.3375,dividendAdditionalRate:0.3935,
+  cgtAllowance:3000,cgtBasicRate:0.18,cgtHigherRate:0.24,
+  savingsAllowanceBasic:1000,savingsAllowanceHigher:500,savingsAllowanceAdditional:0,
+  savingsStartingRateBand:5000,
+  isaAllowance:20000,lisaAllowance:4000,lisaBonusPct:0.25,juniorIsaAllowance:9000,
+  pensionAnnualAllowance:60000,
+  pensionAATaperStart:260000,
+  pensionThresholdIncome:200000,
+  pensionAATaperFloor:10000,
+  pensionAATaperRate:0.5,
+  pensionCarryForwardYears:3,
+  mpaa:10000,
+  lumpSumAllowance:268275,
+  lumpSumDeathBenefit:1073100,
+  statePensionWeekly:230.25,statePensionAnnual:11973,statePensionQualifyingYears:35,statePensionMinYears:10,class3NIcost:907,
+  ihtNilRateBand:325000,ihtResidenceNilRateBand:175000,ihtRate:0.40,ihtReducedRate:0.36,
+  bprAprCap:1000000,bprAprAboveCapRate:0.50,
+  marriageAllowance:1260,
+  hicbcStart:60000,hicbcEnd:80000,hicbcRatePer200:0.01,
+  childBenefitFirst:26.05,childBenefitOther:17.25,
+  autoEnrolMinEmployer:0.03,autoEnrolMinEmployee:0.05,
+  atrAllocations:{
+    1:{eq:0.10,bond:0.30,cash:0.55,alt:0.05,label:'Defensive'},
+    2:{eq:0.25,bond:0.40,cash:0.30,alt:0.05,label:'Cautious'},
+    3:{eq:0.40,bond:0.40,cash:0.15,alt:0.05,label:'Cautious-balanced'},
+    4:{eq:0.55,bond:0.30,cash:0.10,alt:0.05,label:'Balanced'},
+    5:{eq:0.70,bond:0.20,cash:0.05,alt:0.05,label:'Balanced-growth'},
+    6:{eq:0.80,bond:0.13,cash:0.02,alt:0.05,label:'Growth'},
+    7:{eq:0.90,bond:0.05,cash:0.00,alt:0.05,label:'Adventurous'}
+  }
+};
+
+const TABS=[
+  {id:'dashboard',name:'Dashboard',ico:'◐'},
+  {id:'clients',name:'Clients',ico:'◊'},
+  {id:'profile',name:'Profile',ico:'§'},
+  {id:'tax',name:'Tax',ico:'£'},
+  {id:'pension',name:'Pension',ico:'☷'},
+  {id:'portfolio',name:'Portfolio',ico:'▦'},
+  {id:'suitability',name:'Suitability',ico:'◉'},
+  {id:'scenarios',name:'Scenarios',ico:'≡'},
+  {id:'qa',name:'Q & A',ico:'?'},
+  {id:'reports',name:'Reports',ico:'↓'},
+  {id:'firm',name:'Firm',ico:'⌂'}
+];
+
+let state={
+  active:'dashboard',
+  activeClientId:null,
+  firm:null,
+  advisers:[],
+  clients:[],
+  scenarios:[],
+  audit:[],
+  settings:{anthropicKey:'',geminiKey:'',openaiKey:'',openrouterKey:'',auditChain:true,brandColor:'#8b1a1a',currentAdviserId:null},
+  chat:[],
+  compareScenarios:[],
+  drawerOpen:false,
+  filters:{q:'',adviser:'',risk:'',atr:'',due:''}
+};
+
+const $=(s,p)=>{p=p||document;return p.querySelector(s)};
+const $$=(s,p)=>{p=p||document;return Array.from(p.querySelectorAll(s))};
+const uid=(pfx)=>(pfx||'')+(crypto.randomUUID?crypto.randomUUID().replace(/-/g,'').slice(0,12):Math.random().toString(36).slice(2,14));
+const now=()=>Date.now();
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>(+n||0).toLocaleString('en-GB',{minimumFractionDigits:0,maximumFractionDigits:0});
+const money=n=>'£'+fmt(n);
+const moneyP=n=>'£'+(+n||0).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct=n=>((+n||0)*100).toFixed(1)+'%';
+const dateStr=ts=>ts?new Date(ts).toISOString().slice(0,10):'—';
+const ageFromDob=dob=>{if(!dob)return null;const d=new Date(dob);const a=new Date();let age=a.getFullYear()-d.getFullYear();const m=a.getMonth()-d.getMonth();if(m<0||(m===0&&a.getDate()<d.getDate()))age--;return age};
+function toast(m){const t=$('#toast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(t._to);t._to=setTimeout(()=>t.classList.remove('show'),1900)}
+async function sha256(s){const buf=new TextEncoder().encode(s);const h=await crypto.subtle.digest('SHA-256',buf);return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('')}
+
+// ════════════════════════════════════════════════════════════════
+// IDB · multi-store (firms, advisers, clients, scenarios, audit, settings)
+// ════════════════════════════════════════════════════════════════
+let db;const DB_VERSION=2;const STORES=['firms','advisers','clients','scenarios','audit','settings'];
+function openDB(){return new Promise((res)=>{
+  try{
+    const r=indexedDB.open(STORE,DB_VERSION);
+    r.onupgradeneeded=e=>{const d=e.target.result;for(const s of STORES){if(!d.objectStoreNames.contains(s))d.createObjectStore(s,{keyPath:s==='settings'?undefined:'id'})}};
+    r.onsuccess=e=>{db=e.target.result;res(db)};
+    r.onerror=()=>{db=null;res(null)};
+  }catch(e){db=null;res(null)}
+})}
+function idbPut(store,rec,key){return new Promise((res)=>{
+  if(!db){lsPut(store,rec,key);return res()}
+  try{
+    const tx=db.transaction(store,'readwrite');const s=tx.objectStore(store);
+    const req=key?s.put(rec,key):s.put(rec);
+    tx.oncomplete=()=>res();tx.onerror=()=>{lsPut(store,rec,key);res()};
+  }catch(e){lsPut(store,rec,key);res()}
+})}
+function idbGet(store,key){return new Promise((res)=>{
+  if(!db){return res(lsGet(store,key))}
+  try{
+    const tx=db.transaction(store,'readonly');const req=tx.objectStore(store).get(key);
+    req.onsuccess=()=>res(req.result);req.onerror=()=>res(lsGet(store,key));
+  }catch(e){res(lsGet(store,key))}
+})}
+function idbAll(store){return new Promise((res)=>{
+  if(!db){return res(lsAll(store))}
+  try{
+    const tx=db.transaction(store,'readonly');const req=tx.objectStore(store).getAll();
+    req.onsuccess=()=>res(req.result||[]);req.onerror=()=>res(lsAll(store));
+  }catch(e){res(lsAll(store))}
+})}
+function idbDel(store,key){return new Promise((res)=>{
+  if(!db){lsDel(store,key);return res()}
+  try{
+    const tx=db.transaction(store,'readwrite');const req=tx.objectStore(store).delete(key);
+    tx.oncomplete=()=>res();tx.onerror=()=>{lsDel(store,key);res()};
+  }catch(e){lsDel(store,key);res()}
+})}
+const LSKEY=k=>STORE+'::'+k;
+function lsPut(s,r,k){try{const all=JSON.parse(localStorage.getItem(LSKEY(s))||'{}');all[k||r.id]=r;localStorage.setItem(LSKEY(s),JSON.stringify(all))}catch(e){}}
+function lsGet(s,k){try{const all=JSON.parse(localStorage.getItem(LSKEY(s))||'{}');return all[k]}catch(e){return null}}
+function lsAll(s){try{return Object.values(JSON.parse(localStorage.getItem(LSKEY(s))||'{}'))}catch(e){return[]}}
+function lsDel(s,k){try{const all=JSON.parse(localStorage.getItem(LSKEY(s))||'{}');delete all[k];localStorage.setItem(LSKEY(s),JSON.stringify(all))}catch(e){}}
+
+async function loadAllStores(){
+  state.firm=(await idbAll('firms'))[0]||null;
+  state.advisers=(await idbAll('advisers'))||[];
+  state.clients=(await idbAll('clients'))||[];
+  state.scenarios=(await idbAll('scenarios'))||[];
+  state.audit=(await idbAll('audit'))||[];
+  state.audit.sort((a,b)=>(a.i||0)-(b.i||0));
+  const s=await idbGet('settings','app');
+  if(s)state.settings=Object.assign({},state.settings,s);
+  const meta=await idbGet('settings','meta');
+  if(meta){state.activeClientId=meta.activeClientId||null;state.active=meta.active||'dashboard';state.chat=meta.chat||[];state.filters=meta.filters||state.filters}
+}
+async function saveMeta(){
+  await idbPut('settings',{activeClientId:state.activeClientId,active:state.active,chat:state.chat.slice(-100),filters:state.filters},'meta');
+}
+async function saveSettingsRec(){await idbPut('settings',state.settings,'app');await saveMeta()}
+async function saveFirm(noBroadcast){
+  if(!state.firm)return;
+  state.firm.updatedAt=Date.now();
+  await idbPut('firms',state.firm);
+  await audit('firm.updated','Firm record updated',{id:state.firm.id,name:state.firm.name});
+  if(!noBroadcast)broadcast('firm.updated',state.firm);
+}
+async function saveAdviser(a,reason,noBroadcast){
+  a.updatedAt=Date.now();await idbPut('advisers',a);
+  if(!state.advisers.find(x=>x.id===a.id))state.advisers.push(a);
+  else state.advisers=state.advisers.map(x=>x.id===a.id?a:x);
+  await audit('adviser.updated',reason||'Adviser updated',{id:a.id,name:a.name});
+  if(!noBroadcast)broadcastDebounced('adviser.updated',a);
+}
+async function saveClient(c,reason,noBroadcast){
+  c.updatedAt=Date.now();await idbPut('clients',c);
+  if(!state.clients.find(x=>x.id===c.id))state.clients.push(c);
+  else state.clients=state.clients.map(x=>x.id===c.id?c:x);
+  await audit('client.updated',reason||'Client record updated',{id:c.id,name:[c.firstName,c.lastName].filter(Boolean).join(' ')});
+  if(!noBroadcast)broadcastDebounced('client.updated',c);
+}
+async function archiveClient(id){
+  const c=state.clients.find(x=>x.id===id);if(!c)return;
+  c.archivedAt=Date.now();c.updatedAt=Date.now();
+  await idbPut('clients',c);
+  await audit('client.archived','Client archived (FCA 7-year retention)',{id});
+  broadcast('client.archived',c);
+}
+async function saveScenario(sc,reason){
+  sc.updatedAt=Date.now();await idbPut('scenarios',sc);
+  if(!state.scenarios.find(x=>x.id===sc.id))state.scenarios.push(sc);
+  else state.scenarios=state.scenarios.map(x=>x.id===sc.id?sc:x);
+  await audit('scenario.saved',reason||'Scenario saved',{id:sc.id,clientId:sc.clientId,name:sc.name});
+}
+async function delScenario(id){
+  const sc=state.scenarios.find(x=>x.id===id);
+  await idbDel('scenarios',id);
+  state.scenarios=state.scenarios.filter(x=>x.id!==id);
+  await audit('scenario.deleted','Scenario deleted',{id,name:sc&&sc.name});
+}
+
+async function audit(action,reasoning,payload){
+  if(!state.settings.auditChain)return;
+  const prevHash=state.audit.length?state.audit[state.audit.length-1].docHash:'';
+  const i=state.audit.length;
+  const ts=Date.now();
+  const adviserId=state.settings.currentAdviserId||'';
+  const clientId=(payload&&payload.id&&action.indexOf('client.')===0)?payload.id:(state.activeClientId||'');
+  const payloadStr=JSON.stringify(payload||{});
+  const docHash=await sha256(prevHash+ts+action+adviserId+clientId+payloadStr);
+  const entry={id:'au_'+i+'_'+ts,i,ts,tool:TOOLNAME,adviserId,clientId,action,reasoning:reasoning||'',configVersion:CONFIG_V,prevHash,docHash,payload:payload||{}};
+  state.audit.push(entry);
+  if(state.audit.length>5000)state.audit=state.audit.slice(-5000);
+  await idbPut('audit',entry);
+}
+
+// ════════════════════════════════════════════════════════════════
+// BROADCAST · fall-client + fall-signal mesh
+// ════════════════════════════════════════════════════════════════
+let chClient,chSignal;
+const broadcastTimers={};
+function broadcast(type,payload){try{chClient&&chClient.postMessage({v:1,type,ts:Date.now(),source:TOOLNAME,payload})}catch(e){}}
+function broadcastDebounced(type,payload){
+  const k=type+':'+((payload&&payload.id)||'');
+  clearTimeout(broadcastTimers[k]);
+  broadcastTimers[k]=setTimeout(()=>broadcast(type,payload),300);
+}
+async function handleMeshMessage(m){
+  if(!m||m.source===TOOLNAME)return;
+  try{
+    if(m.type==='sync.request'){
+      broadcast('sync.snapshot',{clients:state.clients,advisers:state.advisers,firm:state.firm});
+    }else if(m.type==='sync.snapshot'){
+      const p=m.payload||{};
+      if(p.firm&&(!state.firm||(p.firm.updatedAt||0)>(state.firm.updatedAt||0))){state.firm=p.firm;await idbPut('firms',p.firm)}
+      for(const a of(p.advisers||[])){const local=state.advisers.find(x=>x.id===a.id);if(!local||(a.updatedAt||0)>(local.updatedAt||0)){await saveAdviser(a,'sync from '+m.source,true)}}
+      for(const c of(p.clients||[])){const local=state.clients.find(x=>x.id===c.id);if(!local||(c.updatedAt||0)>(local.updatedAt||0)){await saveClient(c,'sync from '+m.source,true)}}
+      render();
+    }else if(m.type==='client.created'||m.type==='client.updated'){
+      const c=m.payload;if(!c||!c.id)return;
+      const local=state.clients.find(x=>x.id===c.id);
+      if(!local||(c.updatedAt||0)>(local.updatedAt||0)){await saveClient(c,'mesh '+m.type+' from '+m.source,true);render()}
+    }else if(m.type==='client.archived'){
+      const c=m.payload;if(!c||!c.id)return;
+      const local=state.clients.find(x=>x.id===c.id);
+      if(local){local.archivedAt=c.archivedAt;await idbPut('clients',local);render()}
+    }else if(m.type==='adviser.created'||m.type==='adviser.updated'){
+      const a=m.payload;if(!a||!a.id)return;
+      const local=state.advisers.find(x=>x.id===a.id);
+      if(!local||(a.updatedAt||0)>(local.updatedAt||0)){await saveAdviser(a,'mesh '+m.type+' from '+m.source,true);render()}
+    }else if(m.type==='firm.updated'){
+      const f=m.payload;if(!f)return;
+      if(!state.firm||(f.updatedAt||0)>(state.firm.updatedAt||0)){state.firm=f;await idbPut('firms',f);render()}
+    }
+  }catch(e){console.warn('mesh handler error',e)}
+}
+function initMesh(){
+  try{
+    chClient=new BroadcastChannel('fall-client');
+    chClient.addEventListener('message',e=>handleMeshMessage(e.data));
+    setTimeout(()=>broadcast('sync.request',{}),350);
+  }catch(e){}
+  try{
+    chSignal=new BroadcastChannel('fall-signal');
+    chSignal.postMessage({source:TOOLNAME,type:'hello',prime:PRIME,version:VERSION,ts:Date.now()});
+    chSignal.addEventListener('message',async e=>{
+      const m=e.data;if(!m)return;
+      if(m.type==='ping')chSignal.postMessage({source:TOOLNAME,type:'pong',prime:PRIME});
+      if(m.source==='si-didy'&&m.type==='query'&&m.intent){const ans=await answerQuestion(m.intent);chSignal.postMessage({source:TOOLNAME,type:'answer',replyTo:m.id,text:ans.text})}
+    });
+  }catch(e){}
+}
+
+// ════════════════════════════════════════════════════════════════
+// CLIENT HELPERS · the active client drives all calcs
+// ════════════════════════════════════════════════════════════════
+function activeClient(){return state.clients.find(c=>c.id===state.activeClientId)}
+function clientName(c){if(!c)return '—';return [c.title,c.firstName,c.lastName].filter(Boolean).join(' ')||'unnamed'}
+function clientAge(c){if(!c)return 0;return c.dob?ageFromDob(c.dob):(c.financials&&c.financials.age)||0}
+function clientRegion(c){return (c&&c.address&&c.address.region)||'England'}
+function isScotland(c){return clientRegion(c)==='Scotland'}
+
+function newBlankClient(adviserId){
+  const id='cl_'+uid();
+  const fid=(state.firm&&state.firm.id)||'';
+  return{
+    id,firmId:fid,createdAt:Date.now(),updatedAt:Date.now(),archivedAt:null,
+    title:'',firstName:'',middleName:'',lastName:'',preferredName:'',dob:'',gender:'',nationality:'GB',countryOfResidence:'GB',nino:'',utr:'',taxResidency:['GB'],
+    email:'',phone:'',
+    address:{line1:'',line2:'',city:'',region:'England',postcode:'',country:'GB',since:''},
+    addressHistory:[],
+    relationships:[],
+    kyc:{status:'pending',riskGrade:'low',pepFlag:false,pepDetails:'',sanctionsStatus:'not-checked',sanctionsCheckedAt:null,sanctionsCheckedBy:'',sourceOfFunds:'',sourceOfFundsNotes:'',sourceOfWealth:'',sourceOfWealthNotes:'',vulnerableCustomerFlag:false,vulnerabilityCategory:'',vulnerabilityNotes:'',documentsHeld:[],lastReviewAt:null,nextReviewDue:null},
+    suitability:{attitudeToRisk:4,capacityForLoss:'medium',knowledgeExperience:'medium',investmentHorizon:20,objectives:[],incomeNeeds:0,ethicalPreferences:'',lastReviewAt:null,atrAnswers:[]},
+    adviserId:adviserId||(state.advisers[0]&&state.advisers[0].id)||'',
+    engagement:{startedAt:Date.now(),type:'ongoing',feeBasis:'AUM%',feeAgreementHash:'',feeAgreementSignedAt:null,initialFee:0,ongoingFee:0.0075,nextReviewDue:Date.now()+365.25*24*3600*1000},
+    notes:[],
+    links:{falladviserScenarios:[],fallpracticeFeeLedgerIds:[],fallpaperDocumentIds:[]},
+    // FallAdviser-specific extension under .financials (does not pollute shared schema)
+    financials:{
+      age:35,targetRetirementAge:67,
+      income:50000,dividendIncome:0,savingsInterest:0,rentalIncome:0,
+      employerPensionPct:0.05,employerContribPct:0.05,
+      monthlyExpenses:2500,emergencyFundMonths:6,
+      qualifyingYearsNI:25,
+      marriageAllowanceClaimed:false,marriageAllowanceDirection:'none', // none | transferring | receiving
+      childBenefitClaimed:0, // £/yr received (pre-HICBC)
+      numChildren:0,
+      hasFlexiblyAccessedPension:false,
+      adjustedNetIncomeManualOverride:null,
+      thresholdIncomeManualOverride:null,
+      bprAssets:0,aprAssets:0,giftsLast7Years:0,mainHomeValue:0,otherAssets:0,liabilities:0,
+      carryForward:[0,0,0]  // prior 3 tax years unused AA
+    },
+    contribs:{isaThisYear:0,lisaThisYear:0,sippThisYear:0,workplacePensionAnnual:0,salarySacrifice:0},
+    holdings:[],  // [{id,label,value,assetClass,taxWrapper,costBasis,lots:[{date,units,costBasis,wrapper}]}]
+    gains:{cgtRealisedThisYear:0,disposals:[]}
+  }
+}
+function newBlankAdviser(){
+  return{id:'ad_'+uid(),firmId:(state.firm&&state.firm.id)||'',createdAt:Date.now(),updatedAt:Date.now(),archivedAt:null,name:'',email:'',phone:'',fcaRefNo:'',smcrRole:'SMF22',status:'active',startedAt:Date.now(),leftAt:null}
+}
+function newBlankFirm(){
+  return{id:'fm_'+uid(),createdAt:Date.now(),updatedAt:Date.now(),name:'',tradingName:'',fcaRefNo:'',companiesHouseNo:'',vatNumber:'',registeredAddress:{line1:'',line2:'',city:'',postcode:'',country:'GB'},piInsurer:'',piPolicyNo:'',piExpiresAt:null,professionalBody:'',brandColor:'#8b1a1a',brandLogoDataUri:'',setupCompletedAt:null}
+}
+
+function nextReviewDueFor(c){
+  if(!c)return null;
+  const start=(c.engagement&&c.engagement.startedAt)||c.createdAt||Date.now();
+  return (c.engagement&&c.engagement.nextReviewDue)||(start+365.25*24*3600*1000);
+}
+function reviewStatus(c){
+  const due=nextReviewDueFor(c);if(!due)return 'unknown';
+  const days=(due-Date.now())/(24*3600*1000);
+  if(days<0)return 'overdue';
+  if(days<60)return 'due-soon';
+  return 'ok';
+}
+
+// ════════════════════════════════════════════════════════════════
+// TAX ENGINES · UK 2025-26 · T0 deterministic
+// England/Wales/NI + Scotland income tax
+// NI · Dividend · CGT · Savings (PSA + starting rate band)
+// Marriage allowance · HICBC · Tapered AA + carry-forward
+// IHT + BPR/APR (post-2026 reform cap)
+// ════════════════════════════════════════════════════════════════
+
+function adjustedPersonalAllowance(income){
+  const over=Math.max(0,income-RULES.paTaperStart);
+  return Math.max(0,RULES.personalAllowance-Math.floor(over/2));
+}
+
+function incomeTaxEngland(income,paAdj){
+  const pa=paAdj==null?adjustedPersonalAllowance(income):paAdj;
+  let remaining=Math.max(0,income-pa);
+  const bands=[];let tax=0;
+  const basic=Math.min(remaining,RULES.basicRateBand);
+  if(basic>0){tax+=basic*RULES.basicRate;bands.push({label:'Basic 20%',rate:RULES.basicRate,amount:basic,tax:basic*RULES.basicRate});remaining-=basic}
+  const higherBandSize=RULES.additionalRateStart-RULES.higherRateStart;
+  const higher=Math.min(remaining,higherBandSize);
+  if(higher>0){tax+=higher*RULES.higherRate;bands.push({label:'Higher 40%',rate:RULES.higherRate,amount:higher,tax:higher*RULES.higherRate});remaining-=higher}
+  if(remaining>0){tax+=remaining*RULES.additionalRate;bands.push({label:'Additional 45%',rate:RULES.additionalRate,amount:remaining,tax:remaining*RULES.additionalRate})}
+  let marginalRate=0;
+  if(income<=pa)marginalRate=0;
+  else if(income<=RULES.higherRateStart)marginalRate=RULES.basicRate;
+  else if(income<=RULES.additionalRateStart)marginalRate=RULES.higherRate;
+  else marginalRate=RULES.additionalRate;
+  if(income>RULES.paTaperStart&&income<=RULES.paTaperEnd)marginalRate=0.60;
+  return{tax,bands,paUsed:pa,marginalRate};
+}
+
+function incomeTaxScotland(income,paAdj){
+  const pa=paAdj==null?adjustedPersonalAllowance(income):paAdj;
+  const S=RULES.scotland;
+  let remaining=Math.max(0,income-pa);
+  const bands=[];let tax=0;
+  // bands above PA (sizes)
+  const starter=Math.min(remaining,S.starterTop-RULES.personalAllowance);
+  if(starter>0){tax+=starter*S.starterRate;bands.push({label:'Starter 19%',rate:S.starterRate,amount:starter,tax:starter*S.starterRate});remaining-=starter}
+  const basic=Math.min(remaining,S.basicTop-S.starterTop);
+  if(basic>0){tax+=basic*S.basicRate;bands.push({label:'Basic 20%',rate:S.basicRate,amount:basic,tax:basic*S.basicRate});remaining-=basic}
+  const inter=Math.min(remaining,S.intermediateTop-S.basicTop);
+  if(inter>0){tax+=inter*S.intermediateRate;bands.push({label:'Intermediate 21%',rate:S.intermediateRate,amount:inter,tax:inter*S.intermediateRate});remaining-=inter}
+  const higher=Math.min(remaining,S.higherTop-S.intermediateTop);
+  if(higher>0){tax+=higher*S.higherRate;bands.push({label:'Higher 42%',rate:S.higherRate,amount:higher,tax:higher*S.higherRate});remaining-=higher}
+  const adv=Math.min(remaining,S.advancedTop-S.higherTop);
+  if(adv>0){tax+=adv*S.advancedRate;bands.push({label:'Advanced 45%',rate:S.advancedRate,amount:adv,tax:adv*S.advancedRate});remaining-=adv}
+  if(remaining>0){tax+=remaining*S.topRate;bands.push({label:'Top 48%',rate:S.topRate,amount:remaining,tax:remaining*S.topRate})}
+  let marginalRate=0;
+  if(income<=pa)marginalRate=0;
+  else if(income<=S.starterTop)marginalRate=S.starterRate;
+  else if(income<=S.basicTop)marginalRate=S.basicRate;
+  else if(income<=S.intermediateTop)marginalRate=S.intermediateRate;
+  else if(income<=S.higherTop)marginalRate=S.higherRate;
+  else if(income<=S.advancedTop)marginalRate=S.advancedRate;
+  else marginalRate=S.topRate;
+  if(income>RULES.paTaperStart&&income<=RULES.paTaperEnd){
+    // Scotland PA taper creates ~63% effective at higher band, simplified marker
+    marginalRate=Math.max(marginalRate,0.63);
+  }
+  return{tax,bands,paUsed:pa,marginalRate};
+}
+
+function incomeTax(income,region,paAdj){
+  if(region==='Scotland')return incomeTaxScotland(income,paAdj);
+  return incomeTaxEngland(income,paAdj);
+}
+
+function nationalInsurance(income){
+  let ni=0;
+  const main=Math.max(0,Math.min(income,RULES.niUpperEarningsLimit)-RULES.niPrimaryThreshold);
+  ni+=main*RULES.niMainRate;
+  const upper=Math.max(0,income-RULES.niUpperEarningsLimit);
+  ni+=upper*RULES.niUpperRate;
+  return{ni,mainAmount:main,upperAmount:upper};
+}
+
+function savingsTax(savingsInterest,salaryIncome,region){
+  if(!savingsInterest)return{tax:0,bands:[],allowance:0,startingBand:0};
+  // PSA depends on highest tax band reached by non-savings income (excl Scotland for PSA purposes — UK-wide tests still apply)
+  // Simplified: use marginal band from non-savings income
+  const it=incomeTax(salaryIncome,region);
+  let psa=0;
+  if(it.marginalRate<=0.20||salaryIncome<=RULES.higherRateStart)psa=RULES.savingsAllowanceBasic;
+  else if(salaryIncome<=RULES.additionalRateStart)psa=RULES.savingsAllowanceHigher;
+  else psa=RULES.savingsAllowanceAdditional;
+  // Starting rate band: 0% on up to £5,000 of savings, tapered £1 per £1 by non-savings income above PA
+  const pa=adjustedPersonalAllowance(salaryIncome);
+  const nonSavTaxable=Math.max(0,salaryIncome-pa);
+  const startingBand=Math.max(0,RULES.savingsStartingRateBand-nonSavTaxable);
+  let taxable=Math.max(0,savingsInterest-startingBand-psa);
+  let tax=0;const bands=[];
+  if(startingBand>0)bands.push({label:'Starting rate 0%',amount:Math.min(savingsInterest,startingBand),tax:0});
+  if(psa>0)bands.push({label:'PSA 0%',amount:Math.min(Math.max(0,savingsInterest-startingBand),psa),tax:0});
+  if(taxable>0){
+    // savings stacks on top of non-savings, taxed at income-tax rates of stacked position
+    // simplified: tax at marginal rate of (salary + savings)
+    const stacked=incomeTax(salaryIncome+taxable,region);
+    const baseline=incomeTax(salaryIncome,region);
+    tax=Math.max(0,stacked.tax-baseline.tax);
+    bands.push({label:'Savings @ marginal',amount:taxable,tax});
+  }
+  return{tax,bands,allowance:psa,startingBand};
+}
+
+function dividendTax(dividend,salaryIncome,region){
+  if(!dividend)return{tax:0,bands:[]};
+  let taxable=Math.max(0,dividend-RULES.dividendAllowance);
+  const pa=adjustedPersonalAllowance(salaryIncome+dividend);
+  const taxableSalary=Math.max(0,salaryIncome-pa);
+  // dividend tax uses UK-wide bands even for Scottish taxpayers (savings & dividends are reserved)
+  const basicBandUsed=Math.min(taxableSalary,RULES.basicRateBand);
+  const basicBandLeft=Math.max(0,RULES.basicRateBand-basicBandUsed);
+  let tax=0;const bands=[];
+  const inBasic=Math.min(taxable,basicBandLeft);
+  if(inBasic>0){tax+=inBasic*RULES.dividendBasicRate;bands.push({label:'Div basic 8.75%',amount:inBasic,tax:inBasic*RULES.dividendBasicRate});taxable-=inBasic}
+  const higherBandSize=RULES.additionalRateStart-RULES.higherRateStart;
+  const inHigher=Math.min(taxable,higherBandSize);
+  if(inHigher>0){tax+=inHigher*RULES.dividendHigherRate;bands.push({label:'Div higher 33.75%',amount:inHigher,tax:inHigher*RULES.dividendHigherRate});taxable-=inHigher}
+  if(taxable>0){tax+=taxable*RULES.dividendAdditionalRate;bands.push({label:'Div additional 39.35%',amount:taxable,tax:taxable*RULES.dividendAdditionalRate})}
+  return{tax,bands};
+}
+
+function capitalGainsTax(realisedGain,salaryIncome){
+  if(realisedGain<=0)return{tax:0,bands:[]};
+  const taxable=Math.max(0,realisedGain-RULES.cgtAllowance);
+  if(taxable<=0)return{tax:0,bands:[{label:'Within £'+RULES.cgtAllowance+' allowance',amount:realisedGain,tax:0}]};
+  const pa=adjustedPersonalAllowance(salaryIncome);
+  const taxableSalary=Math.max(0,salaryIncome-pa);
+  const basicLeft=Math.max(0,RULES.basicRateBand-Math.min(taxableSalary,RULES.basicRateBand));
+  let tax=0;const bands=[];
+  const inBasic=Math.min(taxable,basicLeft);
+  if(inBasic>0){tax+=inBasic*RULES.cgtBasicRate;bands.push({label:'CGT basic 18%',amount:inBasic,tax:inBasic*RULES.cgtBasicRate})}
+  const inHigher=taxable-inBasic;
+  if(inHigher>0){tax+=inHigher*RULES.cgtHigherRate;bands.push({label:'CGT higher 24%',amount:inHigher,tax:inHigher*RULES.cgtHigherRate})}
+  return{tax,bands};
+}
+
+// MARRIAGE ALLOWANCE
+function marriageAllowanceImpact(c){
+  if(!c)return{eligible:false,impact:0,direction:'none'};
+  const f=c.financials||{};
+  if(!f.marriageAllowanceClaimed)return{eligible:false,impact:0,direction:f.marriageAllowanceDirection||'none'};
+  if(f.marriageAllowanceDirection==='receiving'){
+    // recipient: gets £1,260 extra PA equivalent → saves up to £252 (£1,260 × 20%)
+    return{eligible:true,impact:RULES.marriageAllowance*RULES.basicRate,direction:'receiving',adjustedPA:adjustedPersonalAllowance(f.income)+RULES.marriageAllowance};
+  }
+  if(f.marriageAllowanceDirection==='transferring'){
+    // transferor: loses £1,260 of PA — costs nothing if income < (PA - 1260)
+    return{eligible:true,impact:-RULES.marriageAllowance*RULES.basicRate,direction:'transferring',adjustedPA:Math.max(0,adjustedPersonalAllowance(f.income)-RULES.marriageAllowance)};
+  }
+  return{eligible:false,impact:0,direction:'none'};
+}
+
+// HICBC · post-2024 taper £60k-£80k, 1% per £200 over £60k
+function hicbcCharge(c){
+  if(!c)return{charge:0,childBenefit:0,adjustedNetIncome:0};
+  const f=c.financials||{};
+  const cb=+f.childBenefitClaimed||0;
+  const ani=adjustedNetIncome(c);
+  if(ani<=RULES.hicbcStart)return{charge:0,childBenefit:cb,adjustedNetIncome:ani};
+  if(ani>=RULES.hicbcEnd)return{charge:cb,childBenefit:cb,adjustedNetIncome:ani};
+  const over=ani-RULES.hicbcStart;
+  const chargePct=Math.min(1,Math.floor(over/200)*RULES.hicbcRatePer200);
+  return{charge:cb*chargePct,childBenefit:cb,adjustedNetIncome:ani,chargePct};
+}
+
+// Adjusted Net Income (used by PA taper, HICBC) = total taxable income less grossed-up pension contribs and gift aid
+function adjustedNetIncome(c){
+  if(!c)return 0;
+  const f=c.financials||{};
+  if(f.adjustedNetIncomeManualOverride!=null)return +f.adjustedNetIncomeManualOverride;
+  const total=(+f.income||0)+(+f.dividendIncome||0)+(+f.savingsInterest||0)+(+f.rentalIncome||0);
+  // gross relief-at-source personal pension (SIPP) deducted
+  const sipp=(+(c.contribs&&c.contribs.sippThisYear)||0);
+  const sippGross=sipp/0.80; // basic-rate gross-up
+  // salary sacrifice & workplace via net pay already reduce gross pay reported as income; no further deduction
+  return Math.max(0,total-sippGross);
+}
+
+// Threshold income (pension AA tapering)
+function thresholdIncome(c){
+  if(!c)return 0;
+  const f=c.financials||{};
+  if(f.thresholdIncomeManualOverride!=null)return +f.thresholdIncomeManualOverride;
+  const total=(+f.income||0)+(+f.dividendIncome||0)+(+f.savingsInterest||0)+(+f.rentalIncome||0);
+  // exclude employer contribs (would be added back to make adjusted income)
+  const personalContribs=(+(c.contribs&&c.contribs.sippThisYear)||0)/0.80+(+(c.contribs&&c.contribs.salarySacrifice)||0);
+  return Math.max(0,total-personalContribs);
+}
+
+// Adjusted income (pension AA tapering) = threshold + all pension contribs (incl employer)
+function adjustedIncomeForAA(c){
+  if(!c)return 0;
+  const f=c.financials||{};
+  const ti=thresholdIncome(c);
+  const employer=(+f.income||0)*(+f.employerContribPct||0);
+  const personalContribs=(+(c.contribs&&c.contribs.sippThisYear)||0)/0.80+(+(c.contribs&&c.contribs.salarySacrifice)||0)+(+(c.contribs&&c.contribs.workplacePensionAnnual)||0);
+  return ti+employer+personalContribs;
+}
+
+// TAPERED ANNUAL ALLOWANCE
+function taperedAA(c){
+  if(!c)return{aa:RULES.pensionAnnualAllowance,tapered:false,thresholdIncome:0,adjustedIncome:0};
+  const ti=thresholdIncome(c);
+  const ai=adjustedIncomeForAA(c);
+  if(ti<=RULES.pensionThresholdIncome)return{aa:RULES.pensionAnnualAllowance,tapered:false,thresholdIncome:ti,adjustedIncome:ai};
+  if(ai<=RULES.pensionAATaperStart)return{aa:RULES.pensionAnnualAllowance,tapered:false,thresholdIncome:ti,adjustedIncome:ai};
+  const reduction=Math.floor((ai-RULES.pensionAATaperStart)/2);
+  const aa=Math.max(RULES.pensionAATaperFloor,RULES.pensionAnnualAllowance-reduction);
+  return{aa,tapered:true,thresholdIncome:ti,adjustedIncome:ai,reduction};
+}
+
+// CARRY-FORWARD AA
+function carryForwardAA(c){
+  if(!c)return{available:0,years:[0,0,0],current:RULES.pensionAnnualAllowance};
+  const f=c.financials||{};
+  const years=(f.carryForward||[0,0,0]).slice(0,3);
+  const available=years.reduce((s,x)=>s+(+x||0),0);
+  const t=taperedAA(c);
+  return{available,years,current:t.aa,tapered:t.tapered};
+}
+
+// IHT · with BPR/APR post-2026 cap
+function ihtEstimate(c){
+  if(!c)return{net:0,nrb:0,rnrb:0,bprRelief:0,aprRelief:0,taxable:0,tax:0};
+  const f=c.financials||{};
+  const totalAssets=(+f.mainHomeValue||0)+(+f.otherAssets||0)+(+f.bprAssets||0)+(+f.aprAssets||0)-(+f.liabilities||0)+(+f.giftsLast7Years||0);
+  // BPR/APR combined cap (post-2026 reform): 100% on first £1m, 50% on excess
+  const bprAprCombined=(+f.bprAssets||0)+(+f.aprAssets||0);
+  let bprAprRelief=0;
+  if(bprAprCombined>0){
+    const fullRelief=Math.min(bprAprCombined,RULES.bprAprCap);
+    const partialRelief=Math.max(0,bprAprCombined-RULES.bprAprCap)*RULES.bprAprAboveCapRate;
+    bprAprRelief=fullRelief+partialRelief;
+  }
+  const nrb=RULES.ihtNilRateBand;
+  const rnrb=(+f.mainHomeValue||0)>0?RULES.ihtResidenceNilRateBand:0;
+  const taxable=Math.max(0,totalAssets-bprAprRelief-nrb-rnrb);
+  const tax=taxable*RULES.ihtRate;
+  return{net:totalAssets,nrb,rnrb,bprRelief:Math.min(bprAprRelief,+f.bprAssets||0),aprRelief:Math.max(0,bprAprRelief-(+f.bprAssets||0)),bprAprRelief,taxable,tax};
+}
+
+function totalTaxFor(c){
+  if(!c)return{incomeTax:0,bands:[],paUsed:0,marginalRate:0,ni:0,dividendTax:0,cgt:0,savingsTax:0,grossIncome:0,totalLiability:0,effectiveRate:0,region:'England',hicbc:0,marriageAllowance:0};
+  const f=c.financials||{};
+  const region=clientRegion(c);
+  const ma=marriageAllowanceImpact(c);
+  const paAdj=ma.adjustedPA!=null?ma.adjustedPA:adjustedPersonalAllowance(+f.income||0);
+  const it=incomeTax(+f.income||0,region,paAdj);
+  const ni=nationalInsurance(+f.income||0);
+  const dt=dividendTax(+f.dividendIncome||0,+f.income||0,region);
+  const st=savingsTax(+f.savingsInterest||0,+f.income||0,region);
+  const ct=capitalGainsTax((c.gains&&c.gains.cgtRealisedThisYear)||0,+f.income||0);
+  const hi=hicbcCharge(c);
+  const maImpact=ma.eligible?(ma.direction==='receiving'?-RULES.marriageAllowance*RULES.basicRate:0):0;
+  const totalLiability=it.tax+ni.ni+dt.tax+ct.tax+st.tax+(hi.charge||0)+maImpact;
+  const grossIncome=(+f.income||0)+(+f.dividendIncome||0)+(+f.savingsInterest||0)+(+f.rentalIncome||0)+((c.gains&&c.gains.cgtRealisedThisYear)||0);
+  return{
+    incomeTax:it.tax,bands:it.bands,paUsed:it.paUsed,marginalRate:it.marginalRate,
+    ni:ni.ni,dividendTax:dt.tax,cgt:ct.tax,savingsTax:st.tax,savingsBands:st.bands,psa:st.allowance,startingBand:st.startingBand,
+    grossIncome,totalLiability,
+    effectiveRate:grossIncome>0?totalLiability/grossIncome:0,
+    region,hicbc:hi.charge||0,hicbcDetails:hi,
+    marriageAllowance:maImpact,marriageAllowanceDetails:ma
+  };
+}
+
+// ════════════════════════════════════════════════════════════════
+// PENSION PROJECTION
+// ════════════════════════════════════════════════════════════════
+function pensionProjection(currentPot,annualContrib,years,growthRate){
+  const r=growthRate;
+  if(years<=0)return currentPot;
+  const fvPot=currentPot*Math.pow(1+r,years);
+  const fvContribs=annualContrib*((Math.pow(1+r,years)-1)/r);
+  return fvPot+fvContribs;
+}
+function annuityIncomeFromPot(pot,annuityRate){return pot*(annuityRate||0.06)}
+function drawdownYears(pot,annualWithdrawal,growthRate){
+  let years=0,bal=pot,r=growthRate||0.04;
+  while(bal>0&&years<60){bal=bal*(1+r)-annualWithdrawal;years++;if(bal<=0)break}
+  return years;
+}
+
+// ════════════════════════════════════════════════════════════════
+// PORTFOLIO · per-client · CGT lots · Bed&ISA · withdrawal seq
+// ════════════════════════════════════════════════════════════════
+const ASSET_CLASSES={
+  cash:{label:'Cash',risk:0,bucket:'cash'},
+  bond:{label:'Bonds / Gilts',risk:1,bucket:'bond'},
+  equity:{label:'Equity / Shares',risk:3,bucket:'eq'},
+  fund:{label:'Fund / ETF',risk:2,bucket:'eq'},
+  reit:{label:'REIT / Property',risk:2,bucket:'eq'},
+  commodity:{label:'Commodity / Gold',risk:2,bucket:'alt'},
+  crypto:{label:'Crypto',risk:5,bucket:'alt'},
+  pension:{label:'Pension (untyped)',risk:2,bucket:'eq'},
+  alt:{label:'Alternatives',risk:3,bucket:'alt'},
+  other:{label:'Other',risk:2,bucket:'alt'}
+};
+const TAX_WRAPPERS={
+  isa_ss:{label:'S&S ISA',isa:true},
+  isa_cash:{label:'Cash ISA',isa:true},
+  isa_lisa:{label:'LISA',isa:true,lisa:true},
+  isa_if:{label:'IFISA',isa:true},
+  sipp:{label:'SIPP',pension:true},
+  workplace:{label:'Workplace pension',pension:true},
+  gia:{label:'GIA (taxable)',taxable:true},
+  premium:{label:'Premium Bonds',taxable:false},
+  bank:{label:'Bank account',taxable:false},
+  trust:{label:'Trust',taxable:true},
+  bond:{label:'Investment bond',taxable:true},
+  other:{label:'Other'}
+};
+
+function portfolioAnalysisFor(c){
+  if(!c)return{total:0,byClass:{},byWrapper:{},riskScore:0,eq:0,bond:0,cash:0,alt:0,concentration:[],target:RULES.atrAllocations[4],holdings:[]};
+  const h=(c.holdings||[]);
+  const total=h.reduce((s,x)=>s+(+x.value||0),0);
+  const atr=(c.suitability&&c.suitability.attitudeToRisk)||4;
+  const target=RULES.atrAllocations[atr]||RULES.atrAllocations[4];
+  if(!total)return{total:0,byClass:{},byWrapper:{},riskScore:0,eq:0,bond:0,cash:0,alt:0,concentration:[],target,holdings:h};
+  const byClass={},byWrapper={};let riskWeighted=0;
+  for(const x of h){
+    const v=+x.value||0;
+    byClass[x.assetClass]=(byClass[x.assetClass]||0)+v;
+    byWrapper[x.taxWrapper]=(byWrapper[x.taxWrapper]||0)+v;
+    riskWeighted+=v*((ASSET_CLASSES[x.assetClass]&&ASSET_CLASSES[x.assetClass].risk)||2);
+  }
+  const riskScore=total>0?riskWeighted/total:0;
+  let eq=0,bond=0,cash=0,alt=0;
+  for(const k of Object.keys(byClass)){
+    const b=(ASSET_CLASSES[k]&&ASSET_CLASSES[k].bucket)||'alt';
+    if(b==='eq')eq+=byClass[k];
+    else if(b==='bond')bond+=byClass[k];
+    else if(b==='cash')cash+=byClass[k];
+    else alt+=byClass[k];
+  }
+  const concentration=h.filter(x=>(+x.value||0)/total>0.10).map(x=>({label:x.label,pct:(+x.value||0)/total,id:x.id}));
+  return{total,byClass,byWrapper,riskScore,eq:eq/total,bond:bond/total,cash:cash/total,alt:alt/total,concentration,target,holdings:h};
+}
+
+// CGT LOT TRACKING · FIFO matching on disposal
+function disposeFIFO(holding,unitsSold,salePricePerUnit){
+  if(!holding.lots||!holding.lots.length)return{matched:[],remaining:unitsSold,realisedGain:0};
+  const matched=[];let remaining=unitsSold;let realisedGain=0;
+  const sorted=holding.lots.slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
+  for(let i=0;i<sorted.length&&remaining>0;i++){
+    const lot=sorted[i];
+    const take=Math.min(remaining,+lot.units||0);
+    if(take<=0)continue;
+    const costPerUnit=lot.units>0?(+lot.costBasis||0)/(+lot.units||1):0;
+    const proceeds=take*salePricePerUnit;
+    const costMatched=take*costPerUnit;
+    const gain=proceeds-costMatched;
+    realisedGain+=gain;
+    matched.push({lotDate:lot.date,units:take,costMatched,proceeds,gain});
+    lot.units=(+lot.units||0)-take;
+    lot.costBasis=(+lot.costBasis||0)-costMatched;
+    remaining-=take;
+  }
+  // remove fully-disposed lots
+  holding.lots=holding.lots.filter(l=>(+l.units||0)>0.0001);
+  return{matched,remaining,realisedGain};
+}
+
+// BED & ISA SUGGESTIONS
+function bedAndIsaSuggestions(c){
+  if(!c)return[];
+  const out=[];
+  const isaUsed=(+(c.contribs&&c.contribs.isaThisYear)||0)+(+(c.contribs&&c.contribs.lisaThisYear)||0);
+  let isaHeadroom=RULES.isaAllowance-isaUsed;
+  const cgtUsed=(c.gains&&c.gains.cgtRealisedThisYear)||0;
+  let cgtHeadroom=RULES.cgtAllowance-cgtUsed;
+  for(const h of(c.holdings||[])){
+    if(!TAX_WRAPPERS[h.taxWrapper]||!TAX_WRAPPERS[h.taxWrapper].taxable)continue;
+    const value=+h.value||0;
+    const cost=+h.costBasis||0;
+    const gain=value-cost;
+    if(gain<=0||value<=100)continue;
+    const moveAmount=Math.min(value,isaHeadroom);
+    if(moveAmount<=0)break;
+    // gain on portion moved (proportional)
+    const moveGain=value>0?gain*(moveAmount/value):0;
+    const cgtImpact=moveGain<=cgtHeadroom?0:Math.max(0,(moveGain-cgtHeadroom)*0.18);
+    out.push({
+      holding:h.label,holdingId:h.id,
+      moveAmount,moveGain,
+      cgtImpact,
+      usesAllowance:Math.min(moveGain,cgtHeadroom),
+      remainingIsaAfter:isaHeadroom-moveAmount,
+      note:cgtImpact===0?'Fully within CGT allowance — clean shelter.':'Partially over CGT allowance — '+money(cgtImpact)+' CGT may apply.'
+    });
+    isaHeadroom-=moveAmount;
+    cgtHeadroom=Math.max(0,cgtHeadroom-moveGain);
+    if(isaHeadroom<=0)break;
+  }
+  return out;
+}
+
+// TAX-AWARE WITHDRAWAL SEQUENCING
+function withdrawalSequence(c,annualRequired){
+  if(!c||!annualRequired)return{steps:[],totalFromTax:0,note:''};
+  const f=c.financials||{};
+  const region=clientRegion(c);
+  const h=c.holdings||[];
+  // collect per-wrapper balances
+  const wrapperBal={};
+  for(const x of h){wrapperBal[x.taxWrapper]=(wrapperBal[x.taxWrapper]||0)+(+x.value||0)}
+  const isaBal=(wrapperBal.isa_ss||0)+(wrapperBal.isa_cash||0)+(wrapperBal.isa_if||0)+(wrapperBal.isa_lisa||0);
+  const sippBal=(wrapperBal.sipp||0)+(wrapperBal.workplace||0);
+  const giaBal=wrapperBal.gia||0;
+  const cashBal=(wrapperBal.bank||0)+(wrapperBal.premium||0);
+  // suggestion order: cash → ISA → SIPP 25% TFC → GIA (within CGT allowance) → SIPP taxable
+  let need=annualRequired;
+  const steps=[];
+  const takeFrom=(name,bal,note,taxRate)=>{
+    if(need<=0||bal<=0)return;
+    const take=Math.min(bal,need);
+    const tax=take*(taxRate||0);
+    steps.push({source:name,gross:take,tax,net:take-tax,note});
+    need-=(take-tax);
+  };
+  takeFrom('Cash / Bank',cashBal,'No tax · zero-cost first');
+  takeFrom('ISA (all wrappers)',isaBal,'Tax-free withdrawal · preserve allowance shelter as long as possible? Adviser judgement.');
+  const tfc=sippBal*0.25;
+  takeFrom('SIPP · 25% tax-free cash',tfc,'TFC up to LSA £'+fmt(RULES.lumpSumAllowance));
+  // GIA (only within CGT allowance — assume disposal yields gains ≤ allowance)
+  takeFrom('GIA (within CGT allowance)',Math.min(giaBal,RULES.cgtAllowance*5),'Use £'+fmt(RULES.cgtAllowance)+' CGT allowance · harvest losses where possible');
+  // SIPP taxable at marginal rate of *income* of (state pension + drawdown)
+  const sippRemaining=Math.max(0,sippBal-tfc);
+  // estimate marginal rate at retirement = current marginal if no override
+  const estMarg=incomeTax((+f.income||0)*0.6,region).marginalRate;
+  takeFrom('SIPP · taxable drawdown',sippRemaining,'Taxed at retirement marginal rate (est. '+pct(estMarg)+')',estMarg);
+  takeFrom('GIA · remainder',giaBal,'Above CGT allowance — taxed at 18/24%',0.20);
+  const totalFromTax=steps.reduce((s,x)=>s+(x.tax||0),0);
+  return{steps,totalFromTax,unmet:Math.max(0,need),note:need>0?('Funds short by '+money(need)+' for the year.'):''};
+}
+
+// ════════════════════════════════════════════════════════════════
+// SUITABILITY · ATR questionnaire
+// ════════════════════════════════════════════════════════════════
+const ATR_QUESTIONS=[
+  {q:'I would describe myself as a financial risk-taker.',w:1},
+  {q:'I am comfortable seeing my investment fall 20% in value over a year if it has the potential to recover and grow more later.',w:1},
+  {q:'I prefer safety of capital over higher potential returns.',w:-1},
+  {q:'I have invested in equities or equity funds in the past and was comfortable with the experience.',w:1},
+  {q:'A short-term loss would cause me significant stress.',w:-1},
+  {q:'I am willing to accept fluctuations in the value of my investments to achieve long-term growth.',w:1},
+  {q:'If my portfolio fell 30% in a year, I would sell to prevent further losses.',w:-1},
+  {q:'I understand that higher returns generally require taking on greater risk.',w:1},
+  {q:'I would be uncomfortable holding investments that might lose any money.',w:-1},
+  {q:'I have a long time horizon and can ride out market volatility.',w:1}
+];
+
+function scoreATR(answers){
+  // answers: array of 1-5 (Strongly disagree → Strongly agree)
+  if(!answers||answers.length<10)return null;
+  let raw=0,maxRaw=0;
+  for(let i=0;i<ATR_QUESTIONS.length;i++){
+    const ans=+answers[i]||3;
+    const w=ATR_QUESTIONS[i].w;
+    // normalise: agree (5) with positive w gives +2, disagree (1) gives -2
+    const score=(ans-3)*w;
+    raw+=score;
+    maxRaw+=2;
+  }
+  // raw in [-maxRaw, +maxRaw] → map to 1-7
+  const norm=(raw+maxRaw)/(2*maxRaw); // 0..1
+  const atr=Math.max(1,Math.min(7,Math.round(1+norm*6)));
+  return atr;
+}
+
+// ════════════════════════════════════════════════════════════════
+// RECOMMENDER · per-client suggestions
+// ════════════════════════════════════════════════════════════════
+function generateSuggestionsFor(c){
+  if(!c)return[];
+  const f=c.financials||{};
+  const t=totalTaxFor(c);
+  const out=[];
+  // ISA
+  const isaUsed=(+(c.contribs&&c.contribs.isaThisYear)||0)+(+(c.contribs&&c.contribs.lisaThisYear)||0);
+  const isaLeft=RULES.isaAllowance-isaUsed;
+  if(isaLeft>0&&isaLeft<5000)out.push({prio:'med',title:'Use remaining ISA allowance · '+money(isaLeft),why:'The '+money(RULES.isaAllowance)+' ISA allowance resets every 6 April. Unused allowance is lost.'});
+  else if(isaLeft>=5000)out.push({prio:'high',title:'Big ISA allowance unused · '+money(isaLeft)+' of '+money(RULES.isaAllowance),why:'Tax-free growth and withdrawals. Prioritise sheltering taxable cash/holdings.'});
+  // LISA
+  if((f.age||0)<50){
+    const lisaLeft=RULES.lisaAllowance-(+(c.contribs&&c.contribs.lisaThisYear)||0);
+    if(lisaLeft>0)out.push({prio:'med',title:'LISA bonus available · 25% gov match on '+money(lisaLeft),why:'Up to '+money(RULES.lisaAllowance)+'/yr earns '+pct(RULES.lisaBonusPct)+' gov bonus. First-home or age 60+ access · 25% penalty otherwise.'});
+  }
+  // Higher rate SIPP
+  if((f.income||0)>RULES.higherRateStart){
+    const r=t.marginalRate;
+    out.push({prio:'high',title:'Higher-rate · SIPP gets '+pct(r)+' tax relief',why:'At '+pct(r)+' marginal rate, £1,000 net into pension reduces tax by '+money(1000*r/(1-r))+'. Claim higher-rate relief via SA.'});
+  }
+  // 60% trap
+  if((f.income||0)>RULES.paTaperStart&&(f.income||0)<=RULES.paTaperEnd){
+    const into=f.income-RULES.paTaperStart;
+    out.push({prio:'high',title:'60% effective tax trap · '+money(into)+' in taper zone',why:'Pension contribution dropping adjusted income below £100k recovers full PA. Effective benefit ~60%.'});
+  }
+  // Marriage allowance
+  if(!f.marriageAllowanceClaimed&&(f.income||0)<RULES.personalAllowance&&(f.relationships||[]).length===0){
+    // suggest if income below PA
+    out.push({prio:'med',title:'Marriage allowance transfer · save spouse £252/yr',why:'Income '+money(f.income)+' is below £'+fmt(RULES.personalAllowance)+'. Transfer £'+fmt(RULES.marriageAllowance)+' of unused PA to basic-rate spouse.'});
+  }
+  // HICBC
+  const hi=hicbcCharge(c);
+  if(hi.charge>0){
+    out.push({prio:'high',title:'HICBC clawback · '+money(hi.charge)+' on child benefit',why:'Adjusted net income £'+fmt(hi.adjustedNetIncome)+' triggers '+(pct(hi.chargePct||0))+' clawback. Pension contribution reducing ANI to £60k removes the charge entirely.'});
+  }
+  // Tapered AA
+  const taa=taperedAA(c);
+  if(taa.tapered){
+    out.push({prio:'high',title:'Tapered annual allowance · AA reduced to '+money(taa.aa),why:'Adjusted income £'+fmt(taa.adjustedIncome)+' triggers taper. Contribution above AA charged at marginal rate. Carry-forward may help.'});
+  }
+  // Carry-forward
+  const cf=carryForwardAA(c);
+  if(cf.available>0){
+    out.push({prio:'med',title:'Carry-forward AA available · '+money(cf.available),why:'Unused AA from prior 3 years can be used if you have current pensionable earnings ≥ contribution. Years: '+cf.years.map((y,i)=>'Y-'+(i+1)+' £'+fmt(y)).join(' · ')});
+  }
+  // CGT
+  const cgtLeft=RULES.cgtAllowance-((c.gains&&c.gains.cgtRealisedThisYear)||0);
+  if(cgtLeft>0&&((c.gains&&c.gains.cgtRealisedThisYear)||0)===0)out.push({prio:'low',title:'CGT allowance unused · '+money(RULES.cgtAllowance),why:'Small annual allowance — Bed & ISA on GIA holdings to use it.'});
+  // Bed & ISA
+  const bi=bedAndIsaSuggestions(c);
+  if(bi.length){
+    out.push({prio:'med',title:'Bed & ISA opportunity · '+bi.length+' holding'+(bi.length===1?'':'s'),why:bi.slice(0,3).map(x=>x.holding+': move '+money(x.moveAmount)+' (gain '+money(x.moveGain)+', CGT '+money(x.cgtImpact)+')').join(' · ')});
+  }
+  // Emergency fund
+  const efTarget=(f.monthlyExpenses||0)*(f.emergencyFundMonths||6);
+  const cashHoldings=(c.holdings||[]).filter(h=>h.assetClass==='cash'||h.taxWrapper==='bank'||h.taxWrapper==='isa_cash').reduce((s,h)=>s+(+h.value||0),0);
+  if(cashHoldings<efTarget){
+    out.push({prio:efTarget-cashHoldings>5000?'high':'med',title:'Emergency fund short · '+money(cashHoldings)+' of '+money(efTarget),why:(f.emergencyFundMonths||6)+' months essentials at £'+fmt(f.monthlyExpenses||0)+'/mo. Top up before optimising growth.'});
+  }
+  // Workplace match
+  if((f.employerContribPct||0)>0&&(f.income||0)>0){
+    const match=f.income*f.employerContribPct;
+    out.push({prio:'med',title:'Capture employer match · '+pct(f.employerContribPct)+' = '+money(match)+'/yr',why:'Free money. Always contribute at least to the maximum employer top-up before SIPP.'});
+  }
+  // Portfolio drift
+  const pa=portfolioAnalysisFor(c);
+  if(pa.total>1000){
+    const target=pa.target;
+    const eqGap=pa.eq-target.eq;
+    if(Math.abs(eqGap)>0.10){
+      out.push({prio:Math.abs(eqGap)>0.20?'med':'low',title:'Portfolio drift · equity '+pct(pa.eq)+' vs target '+pct(target.eq)+' ('+target.label+')',why:'ATR '+((c.suitability&&c.suitability.attitudeToRisk)||4)+' targets '+pct(target.eq)+' equity. Rebalance via new contributions to avoid CGT.'});
+    }
+    pa.concentration.forEach(x=>{
+      if(x.pct>0.20)out.push({prio:'med',title:'Concentration risk · '+x.label+' is '+pct(x.pct)+' of portfolio',why:'Single-position risk above 20% creates portfolio fragility. Consider trimming.'});
+    });
+  }
+  // State pension
+  if((f.qualifyingYearsNI||0)<RULES.statePensionQualifyingYears){
+    const yearsShort=RULES.statePensionQualifyingYears-(f.qualifyingYearsNI||0);
+    const yearlyImpact=RULES.statePensionAnnual*(yearsShort/RULES.statePensionQualifyingYears);
+    out.push({prio:'med',title:'State pension short by '+yearsShort+' years · '+money(yearlyImpact)+'/yr at risk',why:'Full state pension needs '+RULES.statePensionQualifyingYears+' qualifying years. Class 3 voluntary NI ~£'+RULES.class3NIcost+'/yr typically pays back in 3-4 retirement years.'});
+  }
+  // Annual review due
+  const rs=reviewStatus(c);
+  if(rs==='overdue')out.push({prio:'high',title:'Annual review overdue · '+dateStr(nextReviewDueFor(c)),why:'COBS requires periodic suitability review. Generate a review pack from the Reports tab.'});
+  else if(rs==='due-soon')out.push({prio:'med',title:'Annual review due soon · '+dateStr(nextReviewDueFor(c)),why:'Schedule review meeting and prepare pack.'});
+  // IHT
+  const iht=ihtEstimate(c);
+  if(iht.tax>0){
+    out.push({prio:'med',title:'IHT exposure · est '+money(iht.tax),why:'Net estate '+money(iht.net)+'. NRB '+money(iht.nrb)+' + RNRB '+money(iht.rnrb)+'. BPR/APR relief '+money(iht.bprAprRelief)+'. Consider gifts, trusts, life cover.'});
+  }
+  return out.sort((a,b)=>({high:0,med:1,low:2})[a.prio]-({high:0,med:1,low:2})[b.prio]);
+}
+
+// ════════════════════════════════════════════════════════════════
+// Q&A · cascade T0/T2/T3 · extended T0 patterns for new rules
+// ════════════════════════════════════════════════════════════════
+const Cascade={
+  async detectTier(){const s=state.settings;if(await this._probe())return'T2';if(s.anthropicKey||s.openaiKey||s.geminiKey||s.openrouterKey)return'T3';return'T0'},
+  async _probe(){if(this._p!==undefined)return this._p;try{this._p=await Promise.race([fetch('http://127.0.0.1:11434/api/tags').then(r=>r.ok),new Promise(r=>setTimeout(()=>r(false),350))])}catch(e){this._p=false}return this._p},
+  async generate(sys,user,maxTok){const s=state.settings,max=maxTok||1400;
+    if(s.anthropicKey)try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':s.anthropicKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:max,system:sys,messages:[{role:'user',content:user}]})});const d=await r.json();return{tier:'T3·Claude',text:(d&&d.content&&d.content[0]&&d.content[0].text)||''}}catch(e){}
+    if(s.geminiKey)try{const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+s.geminiKey,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:sys}]},contents:[{parts:[{text:user}]}]})});const d=await r.json();return{tier:'T3·Gemini',text:(d&&d.candidates&&d.candidates[0]&&d.candidates[0].content&&d.candidates[0].content.parts&&d.candidates[0].content.parts[0]&&d.candidates[0].content.parts[0].text)||''}}catch(e){}
+    if(s.openaiKey)try{const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.openaiKey},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'system',content:sys},{role:'user',content:user}]})});const d=await r.json();return{tier:'T3·GPT',text:(d&&d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||''}}catch(e){}
+    if(s.openrouterKey)try{const r=await fetch('https://openrouter.ai/api/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.openrouterKey,'HTTP-Referer':location.origin},body:JSON.stringify({model:'anthropic/claude-haiku-4-5',messages:[{role:'system',content:sys},{role:'user',content:user}]})});const d=await r.json();return{tier:'T3·OpenRouter',text:(d&&d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||''}}catch(e){}
+    return{tier:'T0',text:null};
+  }
+};
+async function updateTierBadge(){const t=await Cascade.detectTier();const el=$('#tierBadge');if(el){el.textContent=t==='T0'?'offline':t;el.classList.toggle('t3',t!=='T0')}const p=$('#pTier');if(p)p.textContent=t}
+
+const T0_PATTERNS=[
+  {match:/isa vs ?(sipp|pension)|sipp vs ?isa|prioritise/i,answer:(q,c)=>{
+    const t=totalTaxFor(c);
+    return '**ISA vs SIPP for '+clientName(c)+' ('+TAX_YEAR+'):**\n\n'+
+      'Marginal rate: '+pct(t.marginalRate)+'.\n\n'+
+      '**ISA** · contribute net · tax-free growth + withdrawals · no age lock\n'+
+      '**SIPP** · contribute gross with '+pct(t.marginalRate)+' relief · 25% tax-free at retirement, 75% taxed at retirement marginal rate\n\n'+
+      '**Heuristic:** if marginal now > expected marginal in retirement → SIPP wins on tax arbitrage. Always capture employer match first.\n\n'+
+      'ISA used: '+money(((c&&c.contribs&&c.contribs.isaThisYear)||0)+((c&&c.contribs&&c.contribs.lisaThisYear)||0))+' of '+money(RULES.isaAllowance)+'.\n'+
+      'Pension AA used: '+money(((c&&c.contribs&&c.contribs.sippThisYear)||0)+((c&&c.contribs&&c.contribs.workplacePensionAnnual)||0)+((c&&c.contribs&&c.contribs.salarySacrifice)||0))+' of '+money(taperedAA(c).aa);
+  }},
+  {match:/cgt|capital gains?/i,answer:(q,c)=>{
+    const m=q.match(/£?(\d[\d,]*)/);const sale=m?parseInt(m[1].replace(/,/g,'')):0;
+    const ct=capitalGainsTax(sale||((c&&c.gains&&c.gains.cgtRealisedThisYear)||0),(c&&c.financials&&c.financials.income)||0);
+    return '**CGT for '+TAX_YEAR+':**\n'+
+      '- Annual allowance: '+money(RULES.cgtAllowance)+'\n'+
+      '- Basic rate: 18% · Higher rate: 24%\n\n'+
+      (sale?'Estimated CGT on '+money(sale)+' gain at income '+money((c&&c.financials&&c.financials.income)||0)+': **'+money(ct.tax)+'**':'')+'\n\n'+
+      '**Reductions:** Spouse transfer · Bed & ISA · Loss harvesting · Defer to next tax year.';
+  }},
+  {match:/marriage allowance|spousal.*transfer/i,answer:(q,c)=>{
+    const f=(c&&c.financials)||{};
+    return '**Marriage allowance · '+TAX_YEAR+':**\n'+
+      '- Transferable amount: £'+fmt(RULES.marriageAllowance)+' of unused PA\n'+
+      '- Recipient must be basic-rate (income < £'+fmt(RULES.higherRateStart)+')\n'+
+      '- Transferor must have income < £'+fmt(RULES.personalAllowance-RULES.marriageAllowance)+' for zero-cost transfer\n'+
+      '- Annual saving: up to **£252** (£1,260 × 20%)\n'+
+      '- Backdate: 4 prior tax years (so currently to 2021-22)\n\n'+
+      ((c&&clientName(c)+' income: '+money(f.income||0)+'.'))+
+      ((f.income||0)<RULES.personalAllowance?' Eligible to transfer.':((f.income||0)<RULES.higherRateStart?' Eligible to receive if spouse has unused PA.':' Not eligible (above basic rate).'));
+  }},
+  {match:/hicbc|high income child benefit|child benefit charge/i,answer:(q,c)=>{
+    const hi=hicbcCharge(c);
+    return '**HICBC · post-2024 reform · '+TAX_YEAR+':**\n'+
+      '- Taper zone: £'+fmt(RULES.hicbcStart)+' – £'+fmt(RULES.hicbcEnd)+' adjusted net income\n'+
+      '- Charge: 1% of child benefit per £200 over £60k (100% at £80k)\n'+
+      '- First child: £'+RULES.childBenefitFirst+'/wk · subsequent: £'+RULES.childBenefitOther+'/wk\n\n'+
+      (c?'For '+clientName(c)+':\n'+
+        '- Adjusted net income: '+money(hi.adjustedNetIncome)+'\n'+
+        '- Child benefit received: '+money(hi.childBenefit)+'/yr\n'+
+        '- **HICBC charge: '+money(hi.charge)+'**\n\n'+
+        (hi.charge>0?'**Fix:** pension contribution dropping ANI below £60k removes the charge entirely. £1 of pension contribution avoids £1 of clawback (effective rate ~50-70% at upper end of taper).':'No HICBC charge applies.'):'No active client.');
+  }},
+  {match:/carry.forward|carry forward|prior.year.*aa/i,answer:(q,c)=>{
+    const cf=carryForwardAA(c);
+    return '**Carry-forward annual allowance:**\n'+
+      '- Unused AA from previous 3 tax years can be brought forward\n'+
+      '- Current year AA must be fully used first\n'+
+      '- Must have pensionable earnings ≥ contribution in current year\n'+
+      '- Must have been a member of a UK registered scheme in the year being carried forward\n\n'+
+      (c?'For '+clientName(c)+':\n'+
+        '- Current AA: '+money(cf.current)+(cf.tapered?' (tapered)':'')+'\n'+
+        '- Carry-forward available: **'+money(cf.available)+'**\n'+
+        '- By year (Y-1, Y-2, Y-3): '+cf.years.map(y=>money(y)).join(' · ')+'\n'+
+        '- Total contributable this year: '+money(cf.current+cf.available):'No active client.');
+  }},
+  {match:/tapered? (annual )?allowance|taper.*aa/i,answer:(q,c)=>{
+    const t=taperedAA(c);
+    return '**Tapered annual allowance · '+TAX_YEAR+':**\n'+
+      '- Trigger: threshold income > £'+fmt(RULES.pensionThresholdIncome)+' AND adjusted income > £'+fmt(RULES.pensionAATaperStart)+'\n'+
+      '- Reduction: £1 per £2 of adjusted income over £260k\n'+
+      '- Floor: £'+fmt(RULES.pensionAATaperFloor)+' AA minimum (at adjusted income ≥ £360k)\n\n'+
+      (c?'For '+clientName(c)+':\n'+
+        '- Threshold income: '+money(t.thresholdIncome)+'\n'+
+        '- Adjusted income: '+money(t.adjustedIncome)+'\n'+
+        '- AA: **'+money(t.aa)+'** '+(t.tapered?'(tapered)':'(full)'):'No active client.');
+  }},
+  {match:/bpr|business property relief|apr|agricultural property relief/i,answer:(q,c)=>{
+    return '**BPR / APR · post-2026 reform:**\n'+
+      '- Qualifying business assets (unquoted shares, AIM, sole trader): 100% relief after 2-year ownership\n'+
+      '- Agricultural property: 100% relief if owner-occupied 2 yrs / let 7 yrs\n'+
+      '- **Post-April 2026 cap:** BPR + APR combined capped at £'+fmt(RULES.bprAprCap)+' at 100%, then 50% relief above\n'+
+      '- Effective IHT on excess: 20% (40% × 50%)\n\n'+
+      (c?'Estate estimate for '+clientName(c)+': '+(()=>{const i=ihtEstimate(c);return 'net '+money(i.net)+' · BPR/APR relief '+money(i.bprAprRelief)+' · IHT '+money(i.tax)})():'');
+  }},
+  {match:/scotland|scottish.*tax|scottish band/i,answer:(q,c)=>{
+    const region=clientRegion(c);
+    const s=RULES.scotland;
+    return '**Scotland income tax bands · '+TAX_YEAR+':**\n'+
+      '- Starter 19% · up to £'+fmt(s.starterTop)+'\n'+
+      '- Basic 20% · up to £'+fmt(s.basicTop)+'\n'+
+      '- Intermediate 21% · up to £'+fmt(s.intermediateTop)+'\n'+
+      '- Higher 42% · up to £'+fmt(s.higherTop)+'\n'+
+      '- Advanced 45% · up to £'+fmt(s.advancedTop)+'\n'+
+      '- Top 48% · above £'+fmt(s.advancedTop)+'\n\n'+
+      'NI, dividend tax, savings tax remain UK-wide (reserved matters).\n\n'+
+      (region==='Scotland'?'Active client is in Scotland. Tax calcs use Scottish bands.':'Active client is in '+region+'. Scottish rates not applicable.');
+  }},
+  {match:/state pension|qualifying years/i,answer:(q,c)=>{
+    const yrs=((c&&c.financials&&c.financials.qualifyingYearsNI)||0);
+    const yrly=RULES.statePensionAnnual*(Math.min(yrs,35)/35);
+    return '**State pension · '+TAX_YEAR+':**\n'+
+      '- Full: '+money(RULES.statePensionAnnual)+'/yr ('+money(RULES.statePensionWeekly)+'/wk)\n'+
+      '- Need 35 qualifying years for full · 10 minimum for any\n\n'+
+      (c?clientName(c)+': '+yrs+' years → est '+money(yrly)+'/yr\n'+
+        'Each missing year ≈ '+money(RULES.statePensionAnnual/35)+'/yr lost\n'+
+        '**Top up via Class 3 NI** (~£'+RULES.class3NIcost+'/yr per missing year) — usually pays back within 3-4 retirement years.':'');
+  }},
+  {match:/personal allowance|60% trap|paper/i,answer:(q,c)=>{
+    const inc=((c&&c.financials&&c.financials.income)||0);
+    const pa=adjustedPersonalAllowance(inc);
+    const inZone=inc>RULES.paTaperStart&&inc<=RULES.paTaperEnd;
+    return '**Personal Allowance taper · '+TAX_YEAR+':**\n'+
+      '- Full PA: '+money(RULES.personalAllowance)+'\n'+
+      '- Reduces £1 per £2 over £'+fmt(RULES.paTaperStart)+'\n'+
+      '- Gone at £'+fmt(RULES.paTaperEnd)+'\n\n'+
+      (c?clientName(c)+'\'s PA: **'+money(pa)+'**\n':'')+
+      (inZone?'\n⚠ IN the 60% trap. Pension contribution dropping ANI below £100k recovers full PA and gets 40% relief on contribution → ~60% effective benefit.':'');
+  }},
+  {match:/savings|psa|personal savings allowance|starting rate/i,answer:(q,c)=>{
+    const inc=((c&&c.financials&&c.financials.income)||0);
+    return '**Personal savings allowance (PSA) · starting rate band · '+TAX_YEAR+':**\n'+
+      '- Basic-rate taxpayer: '+money(RULES.savingsAllowanceBasic)+' PSA\n'+
+      '- Higher-rate: '+money(RULES.savingsAllowanceHigher)+'\n'+
+      '- Additional-rate: £0\n'+
+      '- **Starting rate band:** 0% on up to '+money(RULES.savingsStartingRateBand)+' of savings · tapered £1:£1 by non-savings income over PA\n\n'+
+      (c?clientName(c)+' · income '+money(inc)+'. ':'')+
+      'If non-savings income ≥ PA + £5k, the starting rate band is exhausted. Cash ISA shelters any further savings interest.';
+  }},
+  {match:/bed.{0,3}isa|bed and isa/i,answer:(q,c)=>{
+    const bi=bedAndIsaSuggestions(c);
+    return '**Bed & ISA · '+TAX_YEAR+':**\n'+
+      '- Sell holdings in GIA, immediately repurchase inside ISA\n'+
+      '- Uses ISA allowance + crystallises gain inside CGT allowance\n'+
+      '- Now zero CGT-free repurchase rule (used to be 30-day rule on identical share repurchases) — *but* this still applies between accounts of the same individual; using ISA wrapper sidesteps it\n\n'+
+      (c&&bi.length?'For '+clientName(c)+':\n'+bi.map(x=>'- '+x.holding+': move '+money(x.moveAmount)+' · gain '+money(x.moveGain)+' · CGT impact '+money(x.cgtImpact)).join('\n'):'No Bed & ISA candidates for active client.');
+  }},
+  {match:/withdraw|drawdown.*order|sequencing|retirement income.*order/i,answer:(q,c)=>{
+    const m=q.match(/£?(\d[\d,]*)/);const need=m?parseInt(m[1].replace(/,/g,'')):24000;
+    const seq=withdrawalSequence(c,need);
+    return '**Tax-aware withdrawal sequence · target '+money(need)+'/yr:**\n\n'+
+      (seq.steps.length?seq.steps.map((s,i)=>(i+1)+'. **'+s.source+'** · gross '+money(s.gross)+' · tax '+money(s.tax)+' · net '+money(s.net)+'\n   _'+s.note+'_').join('\n\n'):'No steps generated — no holdings recorded for active client.')+
+      (seq.unmet?'\n\n⚠ Funds short by '+money(seq.unmet):'')+
+      '\n\nTotal tax across sequence: '+money(seq.totalFromTax);
+  }}
+];
+
+async function answerQuestion(q){
+  const c=activeClient();
+  for(let i=0;i<T0_PATTERNS.length;i++){const pat=T0_PATTERNS[i];if(pat.match.test(q))return{src:'T0 · UK rules engine ('+TAX_YEAR+')',text:pat.answer(q,c)}}
+  const tier=await Cascade.detectTier();
+  if(tier!=='T0'){
+    const ctx=buildContext(c);
+    const sys='You are FallAdviser v2, a sovereign multi-client UK financial-advice tool used by an IFA firm. **You are informational only — not regulated FCA advice.** Always say so.\n\n'+
+      'UK '+TAX_YEAR+' rules:\n'+
+      '- PA £'+fmt(RULES.personalAllowance)+' (taper £1/£2 above £100k, gone at £125,140)\n'+
+      '- Income tax E/W/NI: 20% to £50,270 · 40% to £125,140 · 45% above\n'+
+      '- Scotland: starter 19% · basic 20% · inter 21% · higher 42% · advanced 45% · top 48%\n'+
+      '- NI: 8% £12,570-£50,270 · 2% above\n'+
+      '- Dividend allowance £'+fmt(RULES.dividendAllowance)+' · 8.75/33.75/39.35%\n'+
+      '- CGT allowance £'+fmt(RULES.cgtAllowance)+' · 18/24%\n'+
+      '- ISA £'+fmt(RULES.isaAllowance)+' (LISA £'+fmt(RULES.lisaAllowance)+' sub)\n'+
+      '- Pension AA £'+fmt(RULES.pensionAnnualAllowance)+' (tapered above £260k adjusted, floor £10k)\n'+
+      '- Carry-forward 3 years · MPAA £'+fmt(RULES.mpaa)+'\n'+
+      '- Marriage allowance £'+fmt(RULES.marriageAllowance)+' (recipient must be basic rate)\n'+
+      '- HICBC tapered £60k-£80k (post-2024 reform)\n'+
+      '- BPR/APR post-2026: 100% to £1m, 50% above\n'+
+      '- State pension '+money(RULES.statePensionAnnual)+'/yr · 35 NI years\n\n'+
+      'Active client context:\n'+ctx+'\n\nBe concrete · cite £ amounts using their numbers · UK terms · short paragraphs · end with "Verify with HMRC or an authorised adviser before acting."';
+    const r=await Cascade.generate(sys,q,1400);
+    if(r.text)return{src:r.tier,text:r.text};
+  }
+  return{src:'T0 · fallback',text:'Try: "ISA vs SIPP" · "CGT on £15k" · "HICBC" · "marriage allowance" · "carry-forward" · "tapered AA" · "BPR APR" · "Scotland bands" · "bed and ISA" · "withdrawal sequence £30k" · "60% trap" · "state pension"'};
+}
+
+function buildContext(c){
+  if(!c)return 'No active client selected.';
+  const f=c.financials||{};
+  const t=totalTaxFor(c);
+  const pa=portfolioAnalysisFor(c);
+  const cf=carryForwardAA(c);
+  const taa=taperedAA(c);
+  return clientName(c)+' · age '+(clientAge(c)||'-')+' · '+clientRegion(c)+' · target retirement '+(f.targetRetirementAge||67)+'\n'+
+    'ATR '+((c.suitability&&c.suitability.attitudeToRisk)||4)+' · CFL '+((c.suitability&&c.suitability.capacityForLoss)||'medium')+' · KE '+((c.suitability&&c.suitability.knowledgeExperience)||'medium')+'\n'+
+    'Salary '+money(f.income||0)+' · Dividends '+money(f.dividendIncome||0)+' · Savings interest '+money(f.savingsInterest||0)+' · Rental '+money(f.rentalIncome||0)+'\n'+
+    'Marginal '+pct(t.marginalRate)+' · effective '+pct(t.effectiveRate)+' · total tax '+money(t.totalLiability)+'\n'+
+    'ISA '+money((c.contribs&&c.contribs.isaThisYear)||0)+' of '+money(RULES.isaAllowance)+' · LISA '+money((c.contribs&&c.contribs.lisaThisYear)||0)+'\n'+
+    'SIPP '+money((c.contribs&&c.contribs.sippThisYear)||0)+' · workplace '+money((c.contribs&&c.contribs.workplacePensionAnnual)||0)+' · salary sacrifice '+money((c.contribs&&c.contribs.salarySacrifice)||0)+'\n'+
+    'AA '+money(taa.aa)+(taa.tapered?' (tapered)':'')+' · carry-forward '+money(cf.available)+'\n'+
+    'Portfolio '+money(pa.total)+' · '+pct(pa.eq)+' eq / '+pct(pa.bond)+' bond / '+pct(pa.cash)+' cash · risk '+pa.riskScore.toFixed(1)+'/5\n'+
+    'NI years '+(f.qualifyingYearsNI||0)+'/'+RULES.statePensionQualifyingYears+' · review '+reviewStatus(c)+' (due '+dateStr(nextReviewDueFor(c))+')';
+}
+
+// ════════════════════════════════════════════════════════════════
+// VIEWS · routing + render
+// ════════════════════════════════════════════════════════════════
+function showApp(id){state.active=id;saveMeta();render()}
+function toggleDrawer(){const s=$('#sidebar');if(s)s.classList.toggle('open')}
+
+function render(){
+  // onboarding gate
+  if(!state.firm||!state.firm.setupCompletedAt||!state.advisers.length){
+    document.querySelector('.layout').style.display='none';
+    renderOnboarding();
+    return;
+  }
+  document.querySelector('.layout').style.display='';
+  // ensure currentAdviserId
+  if(!state.settings.currentAdviserId&&state.advisers.length)state.settings.currentAdviserId=state.advisers[0].id;
+  renderHeader();
+  renderSidebar();
+  const fn={dashboard:viewDashboard,clients:viewClients,profile:viewProfile,tax:viewTax,pension:viewPension,portfolio:viewPortfolio,suitability:viewSuitability,scenarios:viewScenarios,qa:viewQA,reports:viewReports,firm:viewFirm}[state.active]||viewDashboard;
+  fn();
+}
+
+function renderHeader(){
+  const c=activeClient();
+  $('#cpWho').textContent=c?clientName(c):'— select client —';
+  $('#cpMeta').textContent=c?('ATR '+((c.suitability&&c.suitability.attitudeToRisk)||4)+' · '+(c.kyc&&c.kyc.riskGrade||'low').toUpperCase()):'';
+  $('#tabNav').innerHTML=TABS.map(t=>'<button class="'+(state.active===t.id?'active':'')+'" onclick="showApp(\''+t.id+'\')"><span style="font-family:var(--serif);font-size:14px;color:var(--brass)">'+t.ico+'</span>'+t.name+'</button>').join('');
+}
+
+function renderSidebar(){
+  const f=$('#clientFilter');
+  if(f)state.filters.q=f.value;
+  const af=$('#clientFilterAdviser');
+  if(af){
+    const cur=af.value||state.filters.adviser||'';
+    af.innerHTML='<option value="">all advisers</option>'+state.advisers.map(a=>'<option value="'+esc(a.id)+'"'+(cur===a.id?' selected':'')+'>'+esc(a.name||'(unnamed)')+'</option>').join('');
+    state.filters.adviser=cur;
+  }
+  const rf=$('#clientFilterRisk');if(rf)state.filters.risk=rf.value;
+  const atrf=$('#clientFilterATR');if(atrf)state.filters.atr=atrf.value;
+  const df=$('#clientFilterDue');if(df)state.filters.due=df.value;
+  const list=state.clients.filter(c=>{
+    if(c.archivedAt)return false;
+    const q=(state.filters.q||'').toLowerCase();
+    if(q&&!(clientName(c).toLowerCase().includes(q)||(c.email||'').toLowerCase().includes(q)||(c.address&&(c.address.postcode||'').toLowerCase().includes(q))))return false;
+    if(state.filters.adviser&&c.adviserId!==state.filters.adviser)return false;
+    if(state.filters.risk&&c.kyc&&c.kyc.riskGrade!==state.filters.risk)return false;
+    if(state.filters.atr&&String((c.suitability&&c.suitability.attitudeToRisk)||4)!==state.filters.atr)return false;
+    if(state.filters.due){
+      const rs=reviewStatus(c);
+      if(state.filters.due==='due'&&!(rs==='overdue'||rs==='due-soon'))return false;
+      if(state.filters.due==='ok'&&rs!=='ok')return false;
+    }
+    return true;
+  }).sort((a,b)=>clientName(a).localeCompare(clientName(b)));
+  $('#clientCount').textContent=state.clients.filter(c=>!c.archivedAt).length+' total';
+  const ul=$('#clientList');
+  if(!list.length){
+    ul.innerHTML='<div class="empty-state">No clients match the filter.<br><br><button class="btn sm primary" onclick="newClient()">+ add first client</button></div>';
+    return;
+  }
+  ul.innerHTML=list.map(c=>{
+    const rs=reviewStatus(c);
+    const atr=(c.suitability&&c.suitability.attitudeToRisk)||4;
+    const tags=[];
+    tags.push('<span class="tag atr">ATR '+atr+'</span>');
+    if(c.kyc&&c.kyc.riskGrade){tags.push('<span class="tag">'+esc(c.kyc.riskGrade)+'</span>')}
+    if(rs==='overdue'){tags.push('<span class="tag due">review overdue</span>')}
+    else if(rs==='due-soon'){tags.push('<span class="tag" style="background:var(--amber);color:var(--void)">review soon</span>')}
+    if(c.kyc&&c.kyc.vulnerableCustomerFlag){tags.push('<span class="tag" style="background:var(--amber);color:var(--void)">VC</span>')}
+    return '<div class="client-card '+(state.activeClientId===c.id?'active':'')+'" onclick="selectClient(\''+c.id+'\')">'+
+      '<div class="nm">'+esc(clientName(c))+'</div>'+
+      '<div class="sub">'+tags.join(' ')+'</div></div>';
+  }).join('');
+}
+
+async function selectClient(id){state.activeClientId=id;await saveMeta();render();if(window.innerWidth<=880){$('#sidebar').classList.remove('open')}}
+
+// ════════════════════════════════════════════════════════════════
+// ONBOARDING · firm + first adviser
+// ════════════════════════════════════════════════════════════════
+function renderOnboarding(){
+  const step=!state.firm?1:(!state.firm.setupCompletedAt||!state.advisers.length?2:3);
+  $('#view').innerHTML='<div class="onboard">'+(step===1?onboardStep1():onboardStep2())+'</div>';
+}
+function onboardStep1(){
+  return '<div class="step">step 1 of 2 · your firm</div>'+
+    '<h1>Welcome to FallAdviser v2</h1>'+
+    '<p class="lead">Sovereign multi-client UK financial-advice tool for IFA firms. Multi-adviser, multi-client, ATR-driven suitability, CGT lots, Bed&amp;ISA, marriage allowance, HICBC, tapered AA, BPR/APR. All client data stays on this device.</p>'+
+    '<div class="row"><div class="field"><label>firm name *</label><input id="fm_name" placeholder="Patel Wealth Ltd"></div><div class="field"><label>trading name</label><input id="fm_trade"></div></div>'+
+    '<div class="row"><div class="field"><label>FCA reference no *</label><input id="fm_fca" placeholder="123456"></div><div class="field"><label>companies house no</label><input id="fm_ch"></div></div>'+
+    '<div class="row"><div class="field"><label>address line 1</label><input id="fm_l1"></div><div class="field"><label>city</label><input id="fm_city"></div></div>'+
+    '<div class="row"><div class="field"><label>postcode</label><input id="fm_pc"></div><div class="field"><label>professional body</label><select id="fm_body"><option>CISI</option><option>PFS</option><option>STEP</option><option>Other</option></select></div></div>'+
+    '<div class="row"><div class="field"><label>PI insurer</label><input id="fm_pi"></div><div class="field"><label>PI policy no</label><input id="fm_pip"></div></div>'+
+    '<div style="margin-top:18px;text-align:right"><button class="btn primary" onclick="saveFirmOnboard()">next · add first adviser →</button></div>';
+}
+async function saveFirmOnboard(){
+  const name=$('#fm_name').value.trim();
+  if(!name){toast('firm name required');return}
+  const f=newBlankFirm();
+  f.name=name;f.tradingName=$('#fm_trade').value;f.fcaRefNo=$('#fm_fca').value;f.companiesHouseNo=$('#fm_ch').value;
+  f.registeredAddress={line1:$('#fm_l1').value,line2:'',city:$('#fm_city').value,postcode:$('#fm_pc').value,country:'GB'};
+  f.professionalBody=$('#fm_body').value;
+  f.piInsurer=$('#fm_pi').value;f.piPolicyNo=$('#fm_pip').value;
+  state.firm=f;
+  await saveFirm();
+  toast('firm saved');render();
+}
+function onboardStep2(){
+  return '<div class="step">step 2 of 2 · first adviser</div>'+
+    '<h1>'+esc(state.firm.name)+'</h1>'+
+    '<p class="lead">Add the first adviser. You can add more from the Firm tab later.</p>'+
+    '<div class="row"><div class="field"><label>name *</label><input id="ad_name" placeholder="James Bond"></div><div class="field"><label>email</label><input id="ad_email" type="email"></div></div>'+
+    '<div class="row"><div class="field"><label>phone</label><input id="ad_phone"></div><div class="field"><label>FCA ref</label><input id="ad_fca"></div></div>'+
+    '<div class="row"><div class="field"><label>SM&amp;CR role</label><select id="ad_smcr"><option>SMF1 · CEO</option><option>SMF3 · Director</option><option>SMF22 · Other overall responsibility</option><option>SMF27 · Partner</option><option>SMF16 · Compliance oversight</option><option>SMF17 · MLRO</option><option>Adviser (cert function)</option></select></div><div class="field"><label>status</label><select id="ad_status"><option value="active">Active</option><option value="suspended">Suspended</option></select></div></div>'+
+    '<div style="margin-top:18px;text-align:right"><button class="btn primary" onclick="saveAdviserOnboard()">complete setup →</button></div>';
+}
+async function saveAdviserOnboard(){
+  const name=$('#ad_name').value.trim();
+  if(!name){toast('adviser name required');return}
+  const a=newBlankAdviser();
+  a.name=name;a.email=$('#ad_email').value;a.phone=$('#ad_phone').value;a.fcaRefNo=$('#ad_fca').value;
+  a.smcrRole=$('#ad_smcr').value.split(' · ')[0];a.status=$('#ad_status').value;
+  await saveAdviser(a,'First adviser onboarded');
+  state.firm.setupCompletedAt=Date.now();
+  await saveFirm();
+  state.settings.currentAdviserId=a.id;
+  await saveSettingsRec();
+  broadcast('adviser.created',a);
+  toast('firm + adviser set up');render();
+}
+
+// ════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════════════════════════
+function viewDashboard(){
+  const total=state.clients.filter(c=>!c.archivedAt).length;
+  const dueClients=state.clients.filter(c=>!c.archivedAt&&(reviewStatus(c)==='overdue'||reviewStatus(c)==='due-soon')).sort((a,b)=>nextReviewDueFor(a)-nextReviewDueFor(b));
+  const overdue=dueClients.filter(c=>reviewStatus(c)==='overdue').length;
+  const vulnerable=state.clients.filter(c=>!c.archivedAt&&c.kyc&&c.kyc.vulnerableCustomerFlag).length;
+  const peps=state.clients.filter(c=>!c.archivedAt&&c.kyc&&c.kyc.pepFlag).length;
+  const totalAUM=state.clients.filter(c=>!c.archivedAt).reduce((s,c)=>s+portfolioAnalysisFor(c).total,0);
+  const byAdviser={};
+  state.clients.filter(c=>!c.archivedAt).forEach(c=>{byAdviser[c.adviserId]=(byAdviser[c.adviserId]||0)+1});
+  const c=activeClient();
+  $('#view').innerHTML='<div class="disclaimer"><strong>FallAdviser v2 is informational, not regulated financial advice.</strong> UK rules calibrated to '+TAX_YEAR+'. The bundle is sovereign — client data never leaves the device. Audit chain '+(state.settings.auditChain?'ON':'OFF')+' · '+state.audit.length+' entries. For binding decisions, consult an FCA-authorised adviser.</div>'+
+    '<div class="section-h"><div><h2>Firm dashboard</h2><div class="sub">'+esc(state.firm.name)+' · '+state.advisers.filter(a=>a.status==='active').length+' active advisers · '+total+' clients</div></div></div>'+
+    '<div class="grid">'+
+      '<div class="card"><h3>book overview</h3>'+
+        '<div class="kpi"><span class="l">Active clients</span><span class="v brass">'+total+'</span></div>'+
+        '<div class="kpi"><span class="l">Total AUM (recorded)</span><span class="v brass">'+money(totalAUM)+'</span></div>'+
+        '<div class="kpi"><span class="l">Reviews overdue</span><span class="v '+(overdue?'red':'green')+'">'+overdue+'</span></div>'+
+        '<div class="kpi"><span class="l">Reviews due soon</span><span class="v '+(dueClients.length-overdue>0?'amber':'green')+'">'+(dueClients.length-overdue)+'</span></div>'+
+        '<div class="kpi"><span class="l">Vulnerable customers</span><span class="v '+(vulnerable?'amber':'green')+'">'+vulnerable+'</span></div>'+
+        '<div class="kpi"><span class="l">PEP flags</span><span class="v '+(peps?'amber':'green')+'">'+peps+'</span></div>'+
+      '</div>'+
+      '<div class="card"><h3>reviews due</h3>'+
+        (dueClients.length===0?'<div class="empty-state">All reviews in window.</div>':'<table><tr><th>client</th><th>adviser</th><th class="r">due</th></tr>'+dueClients.slice(0,10).map(c=>{
+          const ad=state.advisers.find(a=>a.id===c.adviserId);
+          return '<tr class="clickable" onclick="selectClient(\''+c.id+'\');showApp(\'profile\')"><td>'+esc(clientName(c))+'</td><td>'+esc((ad&&ad.name)||'-')+'</td><td class="r '+(reviewStatus(c)==='overdue'?'r':'')+'" style="color:'+(reviewStatus(c)==='overdue'?'var(--red)':'var(--amber)')+'">'+dateStr(nextReviewDueFor(c))+'</td></tr>';
+        }).join('')+'</table>')+
+      '</div>'+
+      '<div class="card"><h3>advisers</h3>'+
+        '<table><tr><th>adviser</th><th>role</th><th class="r">clients</th></tr>'+state.advisers.filter(a=>!a.archivedAt&&a.status==='active').map(a=>'<tr><td>'+esc(a.name||'-')+'</td><td>'+esc(a.smcrRole||'-')+'</td><td class="r">'+(byAdviser[a.id]||0)+'</td></tr>').join('')+'</table>'+
+      '</div>'+
+      (c?'<div class="card" style="grid-column:1/-1;border-color:var(--brass)"><h3>active client snapshot · '+esc(clientName(c))+'</h3>'+
+        (function(){const t=totalTaxFor(c);const pa=portfolioAnalysisFor(c);const sugg=generateSuggestionsFor(c);
+        return '<div class="grid" style="margin-top:8px">'+
+          '<div><div class="kpi"><span class="l">Income</span><span class="v">'+money((c.financials&&c.financials.income)||0)+'</span></div>'+
+            '<div class="kpi"><span class="l">Marginal rate</span><span class="v amber">'+pct(t.marginalRate)+'</span></div>'+
+            '<div class="kpi"><span class="l">Total tax</span><span class="v red">−'+money(t.totalLiability)+'</span></div>'+
+            '<div class="kpi"><span class="l">Region</span><span class="v">'+t.region+'</span></div></div>'+
+          '<div><div class="kpi"><span class="l">Portfolio</span><span class="v brass">'+money(pa.total)+'</span></div>'+
+            '<div class="kpi"><span class="l">Equity / Bond / Cash</span><span class="v">'+pct(pa.eq)+' / '+pct(pa.bond)+' / '+pct(pa.cash)+'</span></div>'+
+            '<div class="kpi"><span class="l">ATR target</span><span class="v">'+pa.target.label+'</span></div>'+
+            '<div class="kpi"><span class="l">Next review</span><span class="v '+(reviewStatus(c)==='overdue'?'red':reviewStatus(c)==='due-soon'?'amber':'green')+'">'+dateStr(nextReviewDueFor(c))+'</span></div></div>'+
+          '<div><h3 style="font-size:12px;margin-bottom:8px">top suggestions</h3>'+
+            (sugg.slice(0,4).map(s=>'<div class="sug '+s.prio+'" style="font-size:12px;padding:7px 10px"><div class="prio">'+s.prio+'</div><div>'+esc(s.title)+'</div></div>').join('')||'<div class="empty-state">No active suggestions.</div>')+
+          '</div>'+
+        '</div>';})()+'</div>':'<div class="card" style="grid-column:1/-1"><h3>no active client</h3><div class="empty-state">Select a client from the sidebar, or <a onclick="newClient()" style="cursor:pointer">add a new client</a>.</div></div>')+
+    '</div>';
+}
+
+// ════════════════════════════════════════════════════════════════
+// CLIENTS LIST · with create / archive / select
+// ════════════════════════════════════════════════════════════════
+function viewClients(){
+  const clients=state.clients.filter(c=>!c.archivedAt).sort((a,b)=>clientName(a).localeCompare(clientName(b)));
+  $('#view').innerHTML='<div class="section-h"><div><h2>Clients</h2><div class="sub">'+clients.length+' active · '+state.clients.filter(c=>c.archivedAt).length+' archived</div></div><div class="actions"><button class="btn primary" onclick="newClient()">+ new client</button><button class="btn ghost" onclick="showArchived()">view archived</button></div></div>'+
+    (clients.length===0?'<div class="card"><div class="empty-state">No clients yet. Click <strong>+ new client</strong> to add one.</div></div>':
+    '<div class="card"><table><tr><th>name</th><th>adviser</th><th>ATR</th><th>risk</th><th class="r">AUM</th><th class="r">income</th><th>review due</th><th></th></tr>'+
+    clients.map(c=>{
+      const ad=state.advisers.find(a=>a.id===c.adviserId);
+      const pa=portfolioAnalysisFor(c);
+      const rs=reviewStatus(c);
+      return '<tr class="clickable" onclick="selectClient(\''+c.id+'\');showApp(\'profile\')">'+
+        '<td><strong>'+esc(clientName(c))+'</strong>'+(c.kyc&&c.kyc.vulnerableCustomerFlag?' <span class="tag amber">VC</span>':'')+(c.kyc&&c.kyc.pepFlag?' <span class="tag amber">PEP</span>':'')+'</td>'+
+        '<td>'+esc((ad&&ad.name)||'-')+'</td>'+
+        '<td>'+((c.suitability&&c.suitability.attitudeToRisk)||4)+'</td>'+
+        '<td>'+(c.kyc&&c.kyc.riskGrade||'-')+'</td>'+
+        '<td class="r">'+money(pa.total)+'</td>'+
+        '<td class="r">'+money((c.financials&&c.financials.income)||0)+'</td>'+
+        '<td style="color:'+(rs==='overdue'?'var(--red)':rs==='due-soon'?'var(--amber)':'var(--cream-dim)')+'">'+dateStr(nextReviewDueFor(c))+'</td>'+
+        '<td><button class="btn sm danger" onclick="event.stopPropagation();confirmArchive(\''+c.id+'\')">archive</button></td>'+
+      '</tr>';
+    }).join('')+'</table></div>');
+}
+
+async function newClient(){
+  if(!state.firm){toast('complete firm setup first');return}
+  const c=newBlankClient(state.settings.currentAdviserId);
+  c.firstName='New';c.lastName='Client';
+  await saveClient(c,'New client created');
+  broadcast('client.created',c);
+  state.activeClientId=c.id;
+  state.active='profile';
+  await saveMeta();
+  render();
+  toast('client created · edit profile');
+}
+
+function confirmArchive(id){
+  const c=state.clients.find(x=>x.id===id);
+  if(!c)return;
+  if(!confirm('Archive '+clientName(c)+'? (FCA 7-year retention applies — record is not deleted.)'))return;
+  archiveClient(id).then(()=>{if(state.activeClientId===id)state.activeClientId=null;toast('archived');render()});
+}
+
+function showArchived(){
+  const arch=state.clients.filter(c=>c.archivedAt);
+  openModalCustom('Archived clients ('+arch.length+')',
+    arch.length===0?'<div class="empty-state">No archived clients.</div>':
+    '<table><tr><th>name</th><th>archived</th><th></th></tr>'+arch.map(c=>'<tr><td>'+esc(clientName(c))+'</td><td>'+dateStr(c.archivedAt)+'</td><td><button class="btn sm" onclick="unarchive(\''+c.id+'\')">restore</button></td></tr>').join('')+'</table>');
+}
+async function unarchive(id){
+  const c=state.clients.find(x=>x.id===id);
+  c.archivedAt=null;c.updatedAt=Date.now();
+  await idbPut('clients',c);
+  await audit('client.unarchived','Client restored from archive',{id});
+  broadcast('client.updated',c);
+  closeModal();render();toast('restored');
+}
+
+// ════════════════════════════════════════════════════════════════
+// PROFILE · the active client's full record
+// ════════════════════════════════════════════════════════════════
+function viewProfile(){
+  const c=activeClient();
+  if(!c){$('#view').innerHTML='<div class="card"><div class="empty-state">No client selected. Choose from the sidebar or create one.</div></div>';return}
+  const f=c.financials||{};
+  const adviserOpts=state.advisers.filter(a=>a.status==='active').map(a=>'<option value="'+a.id+'"'+(c.adviserId===a.id?' selected':'')+'>'+esc(a.name||'-')+'</option>').join('');
+  $('#view').innerHTML='<div class="section-h"><div><h2>'+esc(clientName(c))+'</h2><div class="sub">id '+c.id.slice(0,10)+' · created '+dateStr(c.createdAt)+' · updated '+dateStr(c.updatedAt)+'</div></div><div class="actions"><button class="btn primary" onclick="saveProfile()">save</button><button class="btn ghost" onclick="showApp(\'suitability\')">suitability →</button></div></div>'+
+    '<div class="grid">'+
+    '<div class="card"><h3>personal</h3>'+
+      '<div class="row"><div class="field"><label>title</label><select id="p_title">'+['','Mr','Mrs','Ms','Miss','Mx','Dr','Other'].map(o=>'<option'+(c.title===o?' selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
+      '<div class="field"><label>preferred name</label><input id="p_pref" value="'+esc(c.preferredName)+'"></div></div>'+
+      '<div class="row r3"><div class="field"><label>first name *</label><input id="p_first" value="'+esc(c.firstName)+'"></div>'+
+      '<div class="field"><label>middle</label><input id="p_mid" value="'+esc(c.middleName)+'"></div>'+
+      '<div class="field"><label>last *</label><input id="p_last" value="'+esc(c.lastName)+'"></div></div>'+
+      '<div class="row"><div class="field"><label>DOB</label><input id="p_dob" type="date" value="'+esc(c.dob)+'"></div>'+
+      '<div class="field"><label>nationality</label><input id="p_nat" value="'+esc(c.nationality)+'" maxlength="2"></div></div>'+
+      '<div class="row"><div class="field"><label>NINO</label><input id="p_nino" value="'+esc(c.nino)+'" placeholder="AB123456C"></div>'+
+      '<div class="field"><label>UTR</label><input id="p_utr" value="'+esc(c.utr)+'"></div></div>'+
+    '</div>'+
+    '<div class="card"><h3>contact + address</h3>'+
+      '<div class="row"><div class="field"><label>email</label><input id="p_email" type="email" value="'+esc(c.email)+'"></div>'+
+      '<div class="field"><label>phone</label><input id="p_phone" value="'+esc(c.phone)+'"></div></div>'+
+      '<div class="field"><label>address line 1</label><input id="p_a1" value="'+esc(c.address.line1)+'"></div>'+
+      '<div class="row r3"><div class="field"><label>city</label><input id="p_city" value="'+esc(c.address.city)+'"></div>'+
+      '<div class="field"><label>postcode</label><input id="p_pc" value="'+esc(c.address.postcode)+'"></div>'+
+      '<div class="field"><label>region</label><select id="p_region">'+['England','Wales','NI','Scotland'].map(r=>'<option'+(c.address.region===r?' selected':'')+'>'+r+'</option>').join('')+'</select><div class="hint">drives tax bands</div></div></div>'+
+    '</div>'+
+    '<div class="card"><h3>adviser + engagement</h3>'+
+      '<div class="row"><div class="field"><label>adviser</label><select id="p_adv">'+adviserOpts+'</select></div>'+
+      '<div class="field"><label>engagement type</label><select id="p_engt">'+['one-off','ongoing','transactional'].map(o=>'<option'+(c.engagement.type===o?' selected':'')+'>'+o+'</option>').join('')+'</select></div></div>'+
+      '<div class="row r3"><div class="field"><label>fee basis</label><select id="p_feeb">'+['flat','tiered','AUM%','hourly','commission-only'].map(o=>'<option'+(c.engagement.feeBasis===o?' selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
+      '<div class="field"><label>initial fee (£)</label><input id="p_initfee" type="number" value="'+(c.engagement.initialFee||0)+'"></div>'+
+      '<div class="field"><label>ongoing fee</label><input id="p_ongfee" type="number" step="0.0001" value="'+(c.engagement.ongoingFee||0)+'"></div></div>'+
+      '<div class="row"><div class="field"><label>engagement started</label><input id="p_engst" type="date" value="'+dateStr(c.engagement.startedAt)+'"></div>'+
+      '<div class="field"><label>next review due</label><input id="p_engr" type="date" value="'+dateStr(c.engagement.nextReviewDue)+'"></div></div>'+
+    '</div>'+
+    '<div class="card"><h3>KYC / AML</h3>'+
+      '<div class="row r3"><div class="field"><label>status</label><select id="p_kycs">'+['pending','verified','review','failed'].map(o=>'<option'+(c.kyc.status===o?' selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
+      '<div class="field"><label>risk grade</label><select id="p_kycr">'+['low','medium','high'].map(o=>'<option'+(c.kyc.riskGrade===o?' selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
+      '<div class="field"><label>sanctions</label><select id="p_kycsx">'+['not-checked','clear','match','review'].map(o=>'<option'+(c.kyc.sanctionsStatus===o?' selected':'')+'>'+o+'</option>').join('')+'</select></div></div>'+
+      '<div class="row"><div class="field"><label><input type="checkbox" id="p_pep" '+(c.kyc.pepFlag?'checked':'')+'> PEP</label></div>'+
+      '<div class="field"><label><input type="checkbox" id="p_vc" '+(c.kyc.vulnerableCustomerFlag?'checked':'')+'> Vulnerable customer (FG21/1)</label></div></div>'+
+      '<div class="row"><div class="field"><label>source of funds</label><select id="p_sof">'+['','earnings','savings','inheritance','property-sale','business-sale','gift','other'].map(o=>'<option'+(c.kyc.sourceOfFunds===o?' selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
+      '<div class="field"><label>source of wealth</label><input id="p_sow" value="'+esc(c.kyc.sourceOfWealth)+'"></div></div>'+
+    '</div>'+
+    '<div class="card"><h3>income</h3>'+
+      '<div class="row"><div class="field"><label>age</label><input id="p_age" type="number" value="'+(f.age||clientAge(c)||35)+'"></div>'+
+      '<div class="field"><label>target retirement age</label><input id="p_tra" type="number" value="'+(f.targetRetirementAge||67)+'"></div></div>'+
+      '<div class="field"><label>salary income (£/yr)</label><input id="f_inc" type="number" value="'+(f.income||0)+'"></div>'+
+      '<div class="field"><label>dividend income (£/yr)</label><input id="f_div" type="number" value="'+(f.dividendIncome||0)+'"></div>'+
+      '<div class="field"><label>savings interest (£/yr)</label><input id="f_sav" type="number" value="'+(f.savingsInterest||0)+'"></div>'+
+      '<div class="field"><label>rental income (£/yr)</label><input id="f_rent" type="number" value="'+(f.rentalIncome||0)+'"></div>'+
+    '</div>'+
+    '<div class="card"><h3>pension + state</h3>'+
+      '<div class="row"><div class="field"><label>employee contrib %</label><input id="f_epp" type="number" step="0.01" value="'+(f.employerPensionPct||0)+'"><div class="hint">0.05 = 5%</div></div>'+
+      '<div class="field"><label>employer match %</label><input id="f_emp" type="number" step="0.01" value="'+(f.employerContribPct||0)+'"></div></div>'+
+      '<div class="field"><label>NI qualifying years</label><input id="f_qy" type="number" min="0" max="50" value="'+(f.qualifyingYearsNI||0)+'"><div class="hint">need '+RULES.statePensionQualifyingYears+' for full state pension</div></div>'+
+      '<div class="field"><label><input type="checkbox" id="f_fa" '+(f.hasFlexiblyAccessedPension?'checked':'')+'> has flexibly accessed pension (MPAA £'+fmt(RULES.mpaa)+' applies)</label></div>'+
+      '<div class="row r3"><div class="field"><label>carry-forward Y-1 (£)</label><input id="f_cf1" type="number" value="'+((f.carryForward||[])[0]||0)+'"></div>'+
+      '<div class="field"><label>Y-2 (£)</label><input id="f_cf2" type="number" value="'+((f.carryForward||[])[1]||0)+'"></div>'+
+      '<div class="field"><label>Y-3 (£)</label><input id="f_cf3" type="number" value="'+((f.carryForward||[])[2]||0)+'"></div></div>'+
+    '</div>'+
+    '<div class="card"><h3>family + benefits</h3>'+
+      '<div class="row"><div class="field"><label>marriage allowance</label><select id="f_madir"><option value="none"'+(f.marriageAllowanceDirection==='none'||!f.marriageAllowanceDirection?' selected':'')+'>none</option><option value="transferring"'+(f.marriageAllowanceDirection==='transferring'?' selected':'')+'>transferring (£1,260 → spouse)</option><option value="receiving"'+(f.marriageAllowanceDirection==='receiving'?' selected':'')+'>receiving (+£1,260 PA)</option></select></div>'+
+      '<div class="field"><label><input type="checkbox" id="f_maclaim" '+(f.marriageAllowanceClaimed?'checked':'')+'> claimed</label></div></div>'+
+      '<div class="row"><div class="field"><label>children claiming CB</label><input id="f_nch" type="number" min="0" max="20" value="'+(f.numChildren||0)+'"></div>'+
+      '<div class="field"><label>child benefit £/yr (received)</label><input id="f_cb" type="number" value="'+(f.childBenefitClaimed||0)+'"></div></div>'+
+      '<div class="field hint" style="margin-top:4px">HICBC tapered '+money(RULES.hicbcStart)+'-'+money(RULES.hicbcEnd)+' adjusted net income (post-2024 reform)</div>'+
+    '</div>'+
+    '<div class="card"><h3>this year contributions <span class="meta">'+TAX_YEAR+'</span></h3>'+
+      '<div class="row"><div class="field"><label>ISA so far (£)</label><input id="c_isa" type="number" value="'+((c.contribs&&c.contribs.isaThisYear)||0)+'"></div>'+
+      '<div class="field"><label>LISA (£)</label><input id="c_lisa" type="number" value="'+((c.contribs&&c.contribs.lisaThisYear)||0)+'"></div></div>'+
+      '<div class="row"><div class="field"><label>SIPP (£ net)</label><input id="c_sipp" type="number" value="'+((c.contribs&&c.contribs.sippThisYear)||0)+'"></div>'+
+      '<div class="field"><label>workplace pension (£)</label><input id="c_wp" type="number" value="'+((c.contribs&&c.contribs.workplacePensionAnnual)||0)+'"></div></div>'+
+      '<div class="row"><div class="field"><label>salary sacrifice (£)</label><input id="c_ss" type="number" value="'+((c.contribs&&c.contribs.salarySacrifice)||0)+'"></div>'+
+      '<div class="field"><label>CGT realised (£)</label><input id="g_cgt" type="number" value="'+((c.gains&&c.gains.cgtRealisedThisYear)||0)+'"></div></div>'+
+    '</div>'+
+    '<div class="card"><h3>estate · for IHT</h3>'+
+      '<div class="row"><div class="field"><label>main home value (£)</label><input id="f_home" type="number" value="'+(f.mainHomeValue||0)+'"></div>'+
+      '<div class="field"><label>other assets (£)</label><input id="f_oa" type="number" value="'+(f.otherAssets||0)+'"></div></div>'+
+      '<div class="row"><div class="field"><label>BPR-qualifying assets (£)</label><input id="f_bpr" type="number" value="'+(f.bprAssets||0)+'"></div>'+
+      '<div class="field"><label>APR-qualifying (£)</label><input id="f_apr" type="number" value="'+(f.aprAssets||0)+'"></div></div>'+
+      '<div class="row"><div class="field"><label>liabilities (£)</label><input id="f_liab" type="number" value="'+(f.liabilities||0)+'"></div>'+
+      '<div class="field"><label>gifts last 7 years (£)</label><input id="f_g7" type="number" value="'+(f.giftsLast7Years||0)+'"></div></div>'+
+      '<div class="field hint">Post-2026: BPR + APR combined capped £1m at 100% relief, then 50% above</div>'+
+    '</div>'+
+    '<div class="card"><h3>lifestyle</h3>'+
+      '<div class="row"><div class="field"><label>monthly essentials (£)</label><input id="f_mex" type="number" value="'+(f.monthlyExpenses||0)+'"></div>'+
+      '<div class="field"><label>emergency fund (months)</label><input id="f_efm" type="number" value="'+(f.emergencyFundMonths||6)+'"></div></div>'+
+    '</div>'+
+    '</div>'+
+    '<div style="margin-top:14px;text-align:right"><button class="btn primary" onclick="saveProfile()">save profile</button> <button class="btn danger" onclick="confirmArchive(\''+c.id+'\')">archive client</button></div>';
+}
+
+async function saveProfile(){
+  const c=activeClient();if(!c)return;
+  c.title=$('#p_title').value;c.preferredName=$('#p_pref').value;
+  c.firstName=$('#p_first').value;c.middleName=$('#p_mid').value;c.lastName=$('#p_last').value;
+  c.dob=$('#p_dob').value;c.nationality=$('#p_nat').value;c.nino=$('#p_nino').value;c.utr=$('#p_utr').value;
+  c.email=$('#p_email').value;c.phone=$('#p_phone').value;
+  c.address.line1=$('#p_a1').value;c.address.city=$('#p_city').value;c.address.postcode=$('#p_pc').value;c.address.region=$('#p_region').value;
+  c.adviserId=$('#p_adv').value;
+  c.engagement.type=$('#p_engt').value;c.engagement.feeBasis=$('#p_feeb').value;c.engagement.initialFee=+$('#p_initfee').value||0;c.engagement.ongoingFee=+$('#p_ongfee').value||0;
+  c.engagement.startedAt=new Date($('#p_engst').value).getTime()||c.engagement.startedAt;
+  c.engagement.nextReviewDue=new Date($('#p_engr').value).getTime()||c.engagement.nextReviewDue;
+  c.kyc.status=$('#p_kycs').value;c.kyc.riskGrade=$('#p_kycr').value;c.kyc.sanctionsStatus=$('#p_kycsx').value;
+  c.kyc.pepFlag=$('#p_pep').checked;c.kyc.vulnerableCustomerFlag=$('#p_vc').checked;
+  c.kyc.sourceOfFunds=$('#p_sof').value;c.kyc.sourceOfWealth=$('#p_sow').value;
+  c.financials.age=+$('#p_age').value||35;c.financials.targetRetirementAge=+$('#p_tra').value||67;
+  c.financials.income=+$('#f_inc').value||0;c.financials.dividendIncome=+$('#f_div').value||0;c.financials.savingsInterest=+$('#f_sav').value||0;c.financials.rentalIncome=+$('#f_rent').value||0;
+  c.financials.employerPensionPct=+$('#f_epp').value||0;c.financials.employerContribPct=+$('#f_emp').value||0;
+  c.financials.qualifyingYearsNI=+$('#f_qy').value||0;
+  c.financials.hasFlexiblyAccessedPension=$('#f_fa').checked;
+  c.financials.carryForward=[+$('#f_cf1').value||0,+$('#f_cf2').value||0,+$('#f_cf3').value||0];
+  c.financials.marriageAllowanceDirection=$('#f_madir').value;c.financials.marriageAllowanceClaimed=$('#f_maclaim').checked;
+  c.financials.numChildren=+$('#f_nch').value||0;c.financials.childBenefitClaimed=+$('#f_cb').value||0;
+  c.contribs.isaThisYear=+$('#c_isa').value||0;c.contribs.lisaThisYear=+$('#c_lisa').value||0;c.contribs.sippThisYear=+$('#c_sipp').value||0;c.contribs.workplacePensionAnnual=+$('#c_wp').value||0;c.contribs.salarySacrifice=+$('#c_ss').value||0;
+  c.gains.cgtRealisedThisYear=+$('#g_cgt').value||0;
+  c.financials.mainHomeValue=+$('#f_home').value||0;c.financials.otherAssets=+$('#f_oa').value||0;
+  c.financials.bprAssets=+$('#f_bpr').value||0;c.financials.aprAssets=+$('#f_apr').value||0;
+  c.financials.liabilities=+$('#f_liab').value||0;c.financials.giftsLast7Years=+$('#f_g7').value||0;
+  c.financials.monthlyExpenses=+$('#f_mex').value||0;c.financials.emergencyFundMonths=+$('#f_efm').value||6;
+  await saveClient(c,'Profile edited');
+  toast('saved');render();
+}
+
+// ════════════════════════════════════════════════════════════════
+// TAX
+// ════════════════════════════════════════════════════════════════
+function viewTax(){
+  const c=activeClient();if(!c){$('#view').innerHTML='<div class="card"><div class="empty-state">No client selected.</div></div>';return}
+  const t=totalTaxFor(c);const f=c.financials||{};
+  const hi=hicbcCharge(c);const ma=marriageAllowanceImpact(c);
+  $('#view').innerHTML='<div class="section-h"><div><h2>Tax · '+esc(clientName(c))+'</h2><div class="sub">UK '+TAX_YEAR+' · region '+t.region+' · band breakdown · marginal '+pct(t.marginalRate)+'</div></div></div>'+
+    '<div class="grid">'+
+    '<div class="card"><h3>income tax bands <span class="meta">'+t.region+'</span></h3>'+
+      '<table><tr><th>band</th><th class="r">amount</th><th class="r">tax</th></tr>'+
+      '<tr><td>Personal allowance</td><td class="r">'+money(t.paUsed)+'</td><td class="r">£0</td></tr>'+
+      t.bands.map(b=>'<tr><td>'+esc(b.label)+'</td><td class="r">'+money(b.amount)+'</td><td class="r">'+money(b.tax)+'</td></tr>').join('')+
+      '<tr class="total"><td>Income tax total</td><td class="r">'+money((f.income||0)-t.paUsed)+'</td><td class="r">'+money(t.incomeTax)+'</td></tr></table>'+
+      '<div style="margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--cream-muted)">marginal '+pct(t.marginalRate)+' '+((f.income||0)>RULES.paTaperStart&&(f.income||0)<=RULES.paTaperEnd?'<span class="tag red">60% trap</span>':'')+'</div>'+
+    '</div>'+
+    '<div class="card"><h3>total liability</h3>'+
+      '<table><tr><th>tax</th><th class="r">amount</th></tr>'+
+      '<tr><td>Income tax</td><td class="r">'+money(t.incomeTax)+'</td></tr>'+
+      '<tr><td>National insurance</td><td class="r">'+money(t.ni)+'</td></tr>'+
+      '<tr><td>Dividend tax</td><td class="r">'+money(t.dividendTax)+'</td></tr>'+
+      '<tr><td>Savings tax</td><td class="r">'+money(t.savingsTax)+'</td></tr>'+
+      '<tr><td>Capital gains tax</td><td class="r">'+money(t.cgt)+'</td></tr>'+
+      (hi.charge>0?'<tr><td>HICBC clawback</td><td class="r" style="color:var(--red)">'+money(hi.charge)+'</td></tr>':'')+
+      (ma.eligible?'<tr><td>Marriage allowance</td><td class="r" style="color:'+(t.marriageAllowance<0?'var(--green)':'var(--red)')+'">'+(t.marriageAllowance<0?'-':'+')+money(Math.abs(t.marriageAllowance))+'</td></tr>':'')+
+      '<tr class="total"><td>TOTAL</td><td class="r">'+money(t.totalLiability)+'</td></tr>'+
+      '<tr><td>Effective rate</td><td class="r">'+pct(t.effectiveRate)+'</td></tr>'+
+      '<tr><td>Net (rough take-home)</td><td class="r">'+money(t.grossIncome-t.totalLiability)+'</td></tr>'+
+      '</table></div>'+
+    '<div class="card"><h3>allowances · '+TAX_YEAR+'</h3>'+
+      '<table><tr><th>allowance</th><th class="r">limit</th><th class="r">used</th></tr>'+
+      '<tr><td>Personal allowance</td><td class="r">'+money(RULES.personalAllowance)+'</td><td class="r">'+money(t.paUsed)+'</td></tr>'+
+      '<tr><td>Dividend allowance</td><td class="r">'+money(RULES.dividendAllowance)+'</td><td class="r">'+money(Math.min(f.dividendIncome||0,RULES.dividendAllowance))+'</td></tr>'+
+      '<tr><td>PSA</td><td class="r">'+money(t.psa)+'</td><td class="r">'+money(Math.min(f.savingsInterest||0,t.psa))+'</td></tr>'+
+      '<tr><td>Starting rate band</td><td class="r">'+money(t.startingBand)+'</td><td class="r">—</td></tr>'+
+      '<tr><td>CGT allowance</td><td class="r">'+money(RULES.cgtAllowance)+'</td><td class="r">'+money(Math.min((c.gains&&c.gains.cgtRealisedThisYear)||0,RULES.cgtAllowance))+'</td></tr>'+
+      '<tr><td>ISA</td><td class="r">'+money(RULES.isaAllowance)+'</td><td class="r">'+money(((c.contribs&&c.contribs.isaThisYear)||0)+((c.contribs&&c.contribs.lisaThisYear)||0))+'</td></tr>'+
+      '<tr><td>LISA (within ISA)</td><td class="r">'+money(RULES.lisaAllowance)+'</td><td class="r">'+money((c.contribs&&c.contribs.lisaThisYear)||0)+'</td></tr>'+
+      '<tr><td>Pension AA</td><td class="r">'+money(taperedAA(c).aa)+'</td><td class="r">'+money(((c.contribs&&c.contribs.sippThisYear)||0)+((c.contribs&&c.contribs.workplacePensionAnnual)||0)+((c.contribs&&c.contribs.salarySacrifice)||0))+'</td></tr>'+
+      '<tr><td>Carry-forward (3yr)</td><td class="r">'+money(carryForwardAA(c).available)+'</td><td class="r">—</td></tr>'+
+      '</table></div>'+
+    '<div class="card"><h3>what-if · pension contribution</h3>'+
+      '<p style="font-size:13px;color:var(--cream-dim);margin-bottom:10px">Model gross pension contribution to see tax saved (income tax only):</p>'+
+      '<div class="row"><div class="field"><label>contribute (gross £)</label><input id="wi_p" type="number" value="0"></div>'+
+      '<div class="field"><label>impact</label><div id="wi_r" style="padding:7px 10px;background:var(--ink);border-radius:3px;font-size:12px;font-family:var(--mono);color:var(--brass);min-height:30px">enter amount</div></div></div>'+
+    '</div>'+
+    (hi.charge>0?'<div class="card" style="border-color:var(--ox)"><h3>HICBC detail</h3>'+
+      '<div class="kpi"><span class="l">Adjusted net income</span><span class="v">'+money(hi.adjustedNetIncome)+'</span></div>'+
+      '<div class="kpi"><span class="l">Child benefit received</span><span class="v">'+money(hi.childBenefit)+'/yr</span></div>'+
+      '<div class="kpi"><span class="l">Charge %</span><span class="v amber">'+pct(hi.chargePct||0)+'</span></div>'+
+      '<div class="kpi"><span class="l">Charge £</span><span class="v red">'+money(hi.charge)+'</span></div>'+
+      '<div style="margin-top:8px;font-size:11px;color:var(--cream-dim)">A pension contribution that drops ANI below £60k removes the charge entirely.</div></div>':'')+
+    (ma.eligible?'<div class="card"><h3>marriage allowance</h3>'+
+      '<div class="kpi"><span class="l">Direction</span><span class="v">'+ma.direction+'</span></div>'+
+      '<div class="kpi"><span class="l">Annual impact</span><span class="v '+(t.marriageAllowance<0?'green':'red')+'">'+(t.marriageAllowance<0?'-':'+')+money(Math.abs(t.marriageAllowance))+'</span></div>'+
+      '<div class="kpi"><span class="l">Adjusted PA</span><span class="v">'+money(ma.adjustedPA||adjustedPersonalAllowance(f.income||0))+'</span></div></div>':'')+
+    '</div>';
+  const wi=$('#wi_p');
+  if(wi)wi.oninput=e=>{
+    const contrib=+e.target.value||0;
+    const newIncome=Math.max(0,(f.income||0)-contrib);
+    const newT=incomeTax(newIncome,t.region);
+    const saved=t.incomeTax-newT.tax;
+    const reliefAtSource=contrib*0.20;
+    const additional=saved-reliefAtSource;
+    $('#wi_r').innerHTML=contrib?'tax saved: '+money(saved)+'<br>basic relief at source: '+money(reliefAtSource)+'<br>reclaim via SA: '+money(Math.max(0,additional)):'enter amount';
+  };
+}
+
+// ════════════════════════════════════════════════════════════════
+// PENSION
+// ════════════════════════════════════════════════════════════════
+function viewPension(){
+  const c=activeClient();if(!c){$('#view').innerHTML='<div class="card"><div class="empty-state">No client selected.</div></div>';return}
+  const f=c.financials||{};
+  const currentPot=(c.holdings||[]).filter(h=>h.taxWrapper==='sipp'||h.taxWrapper==='workplace').reduce((s,h)=>s+(+h.value||0),0);
+  const annualContrib=((c.contribs&&c.contribs.sippThisYear)||0)+((c.contribs&&c.contribs.workplacePensionAnnual)||0)+((c.contribs&&c.contribs.salarySacrifice)||0)+(f.income||0)*(f.employerContribPct||0);
+  const yearsToRetire=Math.max(0,(f.targetRetirementAge||67)-(f.age||0));
+  const taa=taperedAA(c);const cf=carryForwardAA(c);
+  const scenarios=[{label:'Conservative · 3%',rate:0.03},{label:'Moderate · 5%',rate:0.05},{label:'Optimistic · 7%',rate:0.07}];
+  $('#view').innerHTML='<div class="section-h"><div><h2>Pension · '+esc(clientName(c))+'</h2><div class="sub">'+yearsToRetire+' yrs to '+(f.targetRetirementAge||67)+'</div></div></div>'+
+    '<div class="grid">'+
+    '<div class="card"><h3>state pension</h3>'+
+      '<div class="kpi"><span class="l">Full (35 yrs)</span><span class="v">'+money(RULES.statePensionAnnual)+'/yr</span></div>'+
+      '<div class="kpi"><span class="l">Client years</span><span class="v">'+(f.qualifyingYearsNI||0)+'</span></div>'+
+      '<div class="kpi"><span class="l">Est entitlement</span><span class="v brass">'+money(RULES.statePensionAnnual*(Math.min(f.qualifyingYearsNI||0,35)/35))+'/yr</span></div>'+
+      '<div class="bar"><div style="width:'+Math.min(100,((f.qualifyingYearsNI||0)/35)*100)+'%" class="'+((f.qualifyingYearsNI||0)>=35?'green':'amber')+'"></div></div>'+
+      ((f.qualifyingYearsNI||0)<35?'<div style="font-size:11px;color:var(--cream-dim);margin-top:8px">Top up via Class 3 NI (~£'+RULES.class3NIcost+'/yr per missing year).</div>':'<div style="font-size:11px;color:var(--green);margin-top:8px">Full entitlement.</div>')+
+    '</div>'+
+    '<div class="card"><h3>workplace + SIPP</h3>'+
+      '<div class="kpi"><span class="l">Current pot</span><span class="v">'+money(currentPot)+'</span></div>'+
+      '<div class="kpi"><span class="l">Client contribs/yr</span><span class="v">'+money(((c.contribs&&c.contribs.sippThisYear)||0)+((c.contribs&&c.contribs.workplacePensionAnnual)||0)+((c.contribs&&c.contribs.salarySacrifice)||0))+'</span></div>'+
+      '<div class="kpi"><span class="l">Employer/yr</span><span class="v green">'+money((f.income||0)*(f.employerContribPct||0))+'</span></div>'+
+      '<div class="kpi"><span class="l">Total/yr</span><span class="v brass">'+money(annualContrib)+'</span></div>'+
+    '</div>'+
+    '<div class="card"><h3>annual allowance</h3>'+
+      '<div class="kpi"><span class="l">Current AA</span><span class="v '+(taa.tapered?'amber':'green')+'">'+money(taa.aa)+(taa.tapered?' (tapered)':'')+'</span></div>'+
+      (taa.tapered?'<div class="kpi"><span class="l">Threshold income</span><span class="v">'+money(taa.thresholdIncome)+'</span></div><div class="kpi"><span class="l">Adjusted income</span><span class="v">'+money(taa.adjustedIncome)+'</span></div>':'')+
+      '<div class="kpi"><span class="l">Carry-forward</span><span class="v brass">'+money(cf.available)+'</span></div>'+
+      '<div class="kpi"><span class="l">Total contributable</span><span class="v brass">'+money(taa.aa+cf.available)+'</span></div>'+
+      (f.hasFlexiblyAccessedPension?'<div class="kpi"><span class="l">MPAA in force</span><span class="v amber">'+money(RULES.mpaa)+'</span></div>':'')+
+    '</div>'+
+    '<div class="card" style="grid-column:1/-1"><h3>projection · current pot + contributions</h3>'+
+      '<table><tr><th>scenario</th><th class="r">pot at '+(f.targetRetirementAge||67)+'</th><th class="r">annuity (6%)</th><th class="r">4% drawdown</th><th class="r">drawdown yrs</th></tr>'+
+      scenarios.map(s=>{
+        const pot=pensionProjection(currentPot,annualContrib,yearsToRetire,s.rate);
+        const annuity=annuityIncomeFromPot(pot,0.06);
+        const fourPct=pot*0.04;
+        const dwYears=drawdownYears(pot,fourPct,s.rate*0.6);
+        return '<tr><td>'+esc(s.label)+'</td><td class="r">'+money(pot)+'</td><td class="r">'+money(annuity)+'/yr</td><td class="r">'+money(fourPct)+'/yr</td><td class="r">'+(dwYears>=60?'30+':dwYears)+'</td></tr>';
+      }).join('')+'</table>'+
+      '<div style="margin-top:10px;font-size:11px;color:var(--cream-muted)">Plus state pension '+money(RULES.statePensionAnnual*(Math.min((f.qualifyingYearsNI||0)+yearsToRetire,35)/35))+'/yr est at retirement. 4% rule is a starting heuristic.</div>'+
+    '</div>'+
+    '<div class="card"><h3>retirement income · combined</h3>'+
+      scenarios.map(s=>{
+        const pot=pensionProjection(currentPot,annualContrib,yearsToRetire,s.rate);
+        const fourPct=pot*0.04;
+        const futureSP=RULES.statePensionAnnual*(Math.min((f.qualifyingYearsNI||0)+yearsToRetire,35)/35);
+        return '<div class="kpi"><span class="l">'+esc(s.label)+'</span><span class="v brass">'+money(fourPct+futureSP)+'/yr</span></div>';
+      }).join('')+
+      '<div style="font-size:11px;color:var(--cream-muted);margin-top:8px">Real (today\'s pounds). Apply own inflation assumption.</div>'+
+    '</div>'+
+    '<div class="card"><h3>withdrawal sequence · what-if</h3>'+
+      '<div class="field"><label>required income (£/yr in retirement)</label><input id="wd_n" type="number" value="24000"></div>'+
+      '<div id="wd_r" style="margin-top:10px"></div>'+
+      '<script>(function(){})();<\/script>'+
+    '</div>'+
+    '</div>';
+  const wdn=$('#wd_n');
+  function render_wd(){
+    const need=+wdn.value||0;
+    const seq=withdrawalSequence(c,need);
+    $('#wd_r').innerHTML=seq.steps.length?'<table style="font-size:12px"><tr><th>source</th><th class="r">gross</th><th class="r">tax</th><th class="r">net</th></tr>'+seq.steps.map(s=>'<tr><td>'+esc(s.source)+'</td><td class="r">'+money(s.gross)+'</td><td class="r">'+money(s.tax)+'</td><td class="r">'+money(s.net)+'</td></tr>').join('')+'<tr class="total"><td>tax total</td><td class="r"></td><td class="r">'+money(seq.totalFromTax)+'</td><td class="r"></td></tr></table>'+(seq.unmet?'<div style="margin-top:6px;color:var(--red);font-size:11px">Funds short by '+money(seq.unmet)+'</div>':''):'<div class="empty-state">No holdings yet</div>';
+  }
+  if(wdn){wdn.oninput=render_wd;render_wd()}
+}
+
+// ════════════════════════════════════════════════════════════════
+// PORTFOLIO · holdings + lots + Bed&ISA + concentration
+// ════════════════════════════════════════════════════════════════
+function viewPortfolio(){
+  const c=activeClient();if(!c){$('#view').innerHTML='<div class="card"><div class="empty-state">No client selected.</div></div>';return}
+  const pa=portfolioAnalysisFor(c);
+  const bi=bedAndIsaSuggestions(c);
+  $('#view').innerHTML='<div class="section-h"><div><h2>Portfolio · '+esc(clientName(c))+'</h2><div class="sub">'+(c.holdings||[]).length+' positions · '+money(pa.total)+' net · ATR '+((c.suitability&&c.suitability.attitudeToRisk)||4)+' target '+pa.target.label+'</div></div>'+
+    '<div class="actions"><button class="btn primary" onclick="addHolding()">+ add holding</button><button class="btn" onclick="openModal(\'disposal\')">record disposal</button><button class="btn" onclick="rebalanceSuggestion()">rebalance</button></div></div>'+
+    '<div class="grid">'+
+    '<div class="card" style="grid-column:1/-1"><h3>holdings</h3>'+
+      '<div class="hold-row head"><div>label</div><div>value (£)</div><div>asset class</div><div>tax wrapper</div><div>cost basis</div><div>lots</div><div></div></div>'+
+      '<div id="holdList">'+((c.holdings||[]).map((h,i)=>renderHolding(h,i)).join('')||'<div class="empty-state">No holdings. Click <strong>+ add holding</strong>.</div>')+'</div>'+
+    '</div>'+
+    '<div class="card"><h3>asset allocation</h3>'+
+      (pa.total>0?Object.entries(pa.byClass).sort((a,b)=>b[1]-a[1]).map(function(kv){var k=kv[0],v=kv[1];return '<div class="kpi"><span class="l">'+esc((ASSET_CLASSES[k]&&ASSET_CLASSES[k].label)||k)+'</span><span class="v">'+money(v)+' · '+pct(v/pa.total)+'</span></div><div class="bar"><div style="width:'+(v/pa.total*100).toFixed(1)+'%"></div></div>'}).join(''):'<div class="empty-state">add holdings to analyse</div>')+
+      '<div style="margin-top:10px"><span class="tag">target · '+pa.target.label+'</span> <span class="tag">'+pct(pa.target.eq)+' eq</span> <span class="tag">'+pct(pa.target.bond)+' bond</span></div>'+
+    '</div>'+
+    '<div class="card"><h3>tax wrapper split</h3>'+
+      (pa.total>0?Object.entries(pa.byWrapper).sort((a,b)=>b[1]-a[1]).map(function(kv){var k=kv[0],v=kv[1];return '<div class="kpi"><span class="l">'+esc((TAX_WRAPPERS[k]&&TAX_WRAPPERS[k].label)||k)+'</span><span class="v">'+money(v)+' · '+pct(v/pa.total)+'</span></div>'}).join(''):'<div class="empty-state">add holdings</div>')+
+    '</div>'+
+    (bi.length?'<div class="card" style="border-color:var(--brass)"><h3>Bed &amp; ISA opportunities</h3>'+
+      bi.map(x=>'<div class="sug med"><div class="prio">opportunity</div><div><strong>'+esc(x.holding)+'</strong> · move '+money(x.moveAmount)+'</div><div class="why">gain '+money(x.moveGain)+' · CGT impact '+money(x.cgtImpact)+' · '+x.note+'</div></div>').join('')+
+    '</div>':'')+
+    (pa.concentration.length?'<div class="card" style="border-color:var(--amber)"><h3>concentration warning</h3>'+
+      pa.concentration.map(x=>'<div class="kpi"><span class="l">'+esc(x.label)+'</span><span class="v amber">'+pct(x.pct)+'</span></div>').join('')+
+      '<div style="font-size:11px;color:var(--cream-muted);margin-top:8px">Positions over 10%. Single-stock risk.</div>'+
+    '</div>':'')+
+    '</div>';
+}
+
+function renderHolding(h,i){
+  const lots=(h.lots||[]).length;
+  return '<div class="hold-row">'+
+    '<input value="'+esc(h.label||'')+'" onchange="updHolding('+i+',\'label\',this.value)" placeholder="VWRL · 100 units">'+
+    '<input type="number" value="'+(h.value||0)+'" onchange="updHolding('+i+',\'value\',+this.value)">'+
+    '<select onchange="updHolding('+i+',\'assetClass\',this.value)">'+Object.entries(ASSET_CLASSES).map(function(kv){return '<option value="'+kv[0]+'"'+(h.assetClass===kv[0]?' selected':'')+'>'+esc(kv[1].label)+'</option>'}).join('')+'</select>'+
+    '<select onchange="updHolding('+i+',\'taxWrapper\',this.value)">'+Object.entries(TAX_WRAPPERS).map(function(kv){return '<option value="'+kv[0]+'"'+(h.taxWrapper===kv[0]?' selected':'')+'>'+esc(kv[1].label)+'</option>'}).join('')+'</select>'+
+    '<input type="number" value="'+(h.costBasis||0)+'" onchange="updHolding('+i+',\'costBasis\',+this.value)">'+
+    '<button class="btn sm" onclick="openLots('+i+')" style="padding:3px 6px;font-size:10px">'+lots+' lot'+(lots===1?'':'s')+'</button>'+
+    '<span class="x" onclick="rmHolding('+i+')">×</span></div>';
+}
+
+async function addHolding(){
+  const c=activeClient();if(!c)return;
+  if(!c.holdings)c.holdings=[];
+  c.holdings.push({id:'h_'+uid(),label:'',value:0,assetClass:'fund',taxWrapper:'isa_ss',costBasis:0,lots:[]});
+  await saveClient(c,'Holding added');render();
+}
+async function updHolding(i,k,v){
+  const c=activeClient();if(!c||!c.holdings||!c.holdings[i])return;
+  c.holdings[i][k]=v;await saveClient(c,'Holding updated: '+k);
+  if(k==='value'||k==='assetClass'||k==='taxWrapper'||k==='costBasis')render();
+}
+async function rmHolding(i){
+  const c=activeClient();if(!c||!c.holdings||!c.holdings[i])return;
+  if(!confirm('Remove this holding?'))return;
+  c.holdings.splice(i,1);await saveClient(c,'Holding removed');render();
+}
+async function rebalanceSuggestion(){
+  const c=activeClient();const pa=portfolioAnalysisFor(c);if(!pa.total){toast('add holdings first');return}
+  const target=pa.target;
+  const eqTarget=pa.total*target.eq;const eqCurrent=pa.total*pa.eq;const gap=eqTarget-eqCurrent;
+  openModalCustom('Rebalance suggestion',
+    '<p>Target: <strong>'+target.label+'</strong> · '+pct(target.eq)+' equity / '+pct(target.bond)+' bond / '+pct(target.cash)+' cash</p>'+
+    '<p>Current: '+pct(pa.eq)+' eq / '+pct(pa.bond)+' bond / '+pct(pa.cash)+' cash · total '+money(pa.total)+'</p>'+
+    '<hr style="margin:12px 0;border:none;border-top:1px solid var(--line)">'+
+    '<p>To reach target:</p><ul style="margin:8px 0 12px 22px;font-size:13px;line-height:1.7">'+
+    '<li>'+(gap>0?'Add '+money(gap)+' equity (or sell '+money(-gap*0.5)+' bonds and rebuy equity).':'Reduce equity by '+money(-gap)+' · prefer rebalancing via new contributions to avoid CGT.')+'</li>'+
+    '<li>Use ISA/SIPP wrappers for the rebalance to defer any CGT.</li>'+
+    '<li>Spread changes over 2-3 months if the gap is large (cost averaging).</li>'+
+    '</ul>'+
+    '<p style="font-size:11px;color:var(--cream-muted)">Rebalancing via new contributions is most tax-efficient. Selling GIA can trigger CGT — use £'+fmt(RULES.cgtAllowance)+' allowance.</p>'+
+    '<div class="actions"><button class="btn primary" onclick="closeModal()">got it</button></div>');
+}
+
+function openLots(i){
+  const c=activeClient();const h=c.holdings[i];if(!h)return;
+  if(!h.lots)h.lots=[];
+  const body='<p style="color:var(--cream-dim);font-size:12px;margin-bottom:10px">CGT lots for <strong>'+esc(h.label||'holding')+'</strong>. FIFO matching on disposal. Cost basis is total £ for the lot (not per-unit).</p>'+
+    '<div class="lot-row head"><div>date</div><div>units</div><div>cost basis £</div><div>wrapper</div><div></div></div>'+
+    '<div id="lotList">'+h.lots.map((l,li)=>renderLot(l,i,li)).join('')+'</div>'+
+    '<div style="margin-top:10px"><button class="btn sm" onclick="addLot('+i+')">+ add lot</button></div>'+
+    '<div class="actions"><button class="btn primary" onclick="closeModal()">done</button></div>';
+  openModalCustom('Lots · '+esc(h.label||'holding'),body);
+}
+function renderLot(l,hi,li){
+  return '<div class="lot-row">'+
+    '<input type="date" value="'+esc(l.date||'')+'" onchange="updLot('+hi+','+li+',\'date\',this.value)">'+
+    '<input type="number" value="'+(l.units||0)+'" onchange="updLot('+hi+','+li+',\'units\',+this.value)">'+
+    '<input type="number" value="'+(l.costBasis||0)+'" onchange="updLot('+hi+','+li+',\'costBasis\',+this.value)">'+
+    '<select onchange="updLot('+hi+','+li+',\'wrapper\',this.value)">'+Object.entries(TAX_WRAPPERS).map(function(kv){return '<option value="'+kv[0]+'"'+(l.wrapper===kv[0]?' selected':'')+'>'+esc(kv[1].label)+'</option>'}).join('')+'</select>'+
+    '<span class="x" onclick="rmLot('+hi+','+li+')">×</span></div>';
+}
+async function addLot(hi){
+  const c=activeClient();c.holdings[hi].lots=c.holdings[hi].lots||[];
+  c.holdings[hi].lots.push({date:new Date().toISOString().slice(0,10),units:0,costBasis:0,wrapper:c.holdings[hi].taxWrapper||'gia'});
+  await saveClient(c,'Lot added');openLots(hi);
+}
+async function updLot(hi,li,k,v){
+  const c=activeClient();c.holdings[hi].lots[li][k]=v;await saveClient(c,'Lot updated');
+}
+async function rmLot(hi,li){
+  const c=activeClient();c.holdings[hi].lots.splice(li,1);await saveClient(c,'Lot removed');openLots(hi);
+}
+
+// DISPOSAL form (in modal)
+function openDisposalModal(){
+  const c=activeClient();if(!c||!c.holdings||!c.holdings.length){toast('add holdings first');return}
+  const opts=c.holdings.map((h,i)=>'<option value="'+i+'">'+esc(h.label||'holding '+i)+'</option>').join('');
+  openModalCustom('Record disposal · FIFO CGT',
+    '<div class="field"><label>holding</label><select id="d_h">'+opts+'</select></div>'+
+    '<div class="row"><div class="field"><label>units sold</label><input id="d_u" type="number" value="0"></div>'+
+    '<div class="field"><label>sale price per unit</label><input id="d_pp" type="number" step="0.01" value="0"></div></div>'+
+    '<div class="row"><div class="field"><label>sale date</label><input id="d_dt" type="date" value="'+new Date().toISOString().slice(0,10)+'"></div></div>'+
+    '<div id="d_result" style="margin-top:10px;padding:10px;background:var(--ink);border-radius:3px;font-family:var(--mono);font-size:12px;color:var(--brass)">enter values to preview</div>'+
+    '<div class="actions"><button class="btn" onclick="closeModal()">cancel</button><button class="btn primary" onclick="commitDisposal()">record disposal</button></div>');
+  const recalc=()=>{
+    const hi=+$('#d_h').value;const u=+$('#d_u').value||0;const pp=+$('#d_pp').value||0;
+    const c2=activeClient();const h=JSON.parse(JSON.stringify(c2.holdings[hi]));
+    const res=disposeFIFO(h,u,pp);
+    $('#d_result').innerHTML='Matched '+res.matched.length+' lot'+(res.matched.length===1?'':'s')+' · realised gain <strong>'+money(res.realisedGain)+'</strong>'+(res.remaining>0?' · '+res.remaining+' units unmatched (insufficient lot history)':'');
+  };
+  $('#d_h').onchange=recalc;$('#d_u').oninput=recalc;$('#d_pp').oninput=recalc;recalc();
+}
+async function commitDisposal(){
+  const c=activeClient();const hi=+$('#d_h').value;const u=+$('#d_u').value||0;const pp=+$('#d_pp').value||0;const dt=$('#d_dt').value;
+  if(!u||!pp){toast('units + price required');return}
+  const h=c.holdings[hi];
+  const res=disposeFIFO(h,u,pp);
+  h.value=Math.max(0,(h.value||0)-(u*pp));
+  if(!c.gains)c.gains={cgtRealisedThisYear:0,disposals:[]};
+  c.gains.cgtRealisedThisYear=(c.gains.cgtRealisedThisYear||0)+res.realisedGain;
+  c.gains.disposals.push({date:dt,holdingId:h.id,holdingLabel:h.label,units:u,pricePerUnit:pp,realisedGain:res.realisedGain,matched:res.matched});
+  await saveClient(c,'Disposal recorded · FIFO realised £'+res.realisedGain.toFixed(2));
+  closeModal();toast('disposal recorded · gain '+money(res.realisedGain));render();
+}
+
+// ════════════════════════════════════════════════════════════════
+// SUITABILITY · ATR questionnaire
+// ════════════════════════════════════════════════════════════════
+function viewSuitability(){
+  const c=activeClient();if(!c){$('#view').innerHTML='<div class="card"><div class="empty-state">No client selected.</div></div>';return}
+  const s=c.suitability||{};
+  const answers=s.atrAnswers||[];
+  $('#view').innerHTML='<div class="section-h"><div><h2>Suitability · '+esc(clientName(c))+'</h2><div class="sub">COBS 9 · ATR + capacity for loss + knowledge &amp; experience</div></div><div class="actions"><button class="btn primary" onclick="saveSuitability()">save</button></div></div>'+
+    '<div class="grid">'+
+    '<div class="card"><h3>summary</h3>'+
+      '<div class="row"><div class="field"><label>ATR (1-7)</label><select id="s_atr">'+[1,2,3,4,5,6,7].map(v=>'<option value="'+v+'"'+(s.attitudeToRisk===v?' selected':'')+'>'+v+' · '+RULES.atrAllocations[v].label+'</option>').join('')+'</select></div>'+
+      '<div class="field"><label>capacity for loss</label><select id="s_cfl">'+['low','medium','high'].map(o=>'<option'+(s.capacityForLoss===o?' selected':'')+'>'+o+'</option>').join('')+'</select></div></div>'+
+      '<div class="row"><div class="field"><label>knowledge &amp; experience</label><select id="s_ke">'+['low','medium','high'].map(o=>'<option'+(s.knowledgeExperience===o?' selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
+      '<div class="field"><label>investment horizon (yrs)</label><input id="s_hor" type="number" value="'+(s.investmentHorizon||20)+'"></div></div>'+
+      '<div class="row"><div class="field"><label>income needs (£/yr)</label><input id="s_inc" type="number" value="'+(s.incomeNeeds||0)+'"></div>'+
+      '<div class="field"><label>ethical preferences</label><input id="s_eth" value="'+esc(s.ethicalPreferences||'')+'"></div></div>'+
+      '<div class="field"><label>last reviewed</label><input id="s_lr" type="date" value="'+(s.lastReviewAt?dateStr(s.lastReviewAt):'')+'"></div>'+
+      '<div style="margin-top:12px;padding:10px;background:var(--ink);border-radius:3px;font-size:12px">Target allocation for ATR '+(s.attitudeToRisk||4)+': <strong>'+pct(RULES.atrAllocations[s.attitudeToRisk||4].eq)+' equity</strong> · '+pct(RULES.atrAllocations[s.attitudeToRisk||4].bond)+' bond · '+pct(RULES.atrAllocations[s.attitudeToRisk||4].cash)+' cash · '+pct(RULES.atrAllocations[s.attitudeToRisk||4].alt)+' alt</div>'+
+    '</div>'+
+    '<div class="card" style="grid-column:1/-1"><h3>ATR questionnaire <span class="meta">10 items · Likert 1-5</span></h3>'+
+      '<p style="font-size:12px;color:var(--cream-dim);margin-bottom:14px">1 = Strongly disagree · 2 = Disagree · 3 = Neutral · 4 = Agree · 5 = Strongly agree</p>'+
+      ATR_QUESTIONS.map((q,i)=>'<div style="margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--line-soft)"><div style="font-size:13px;margin-bottom:5px">'+(i+1)+'. '+esc(q.q)+'</div><div class="likert">'+[1,2,3,4,5].map(v=>'<button class="'+(answers[i]===v?'sel':'')+'" onclick="setLikert('+i+','+v+')">'+v+'</button>').join('')+'</div></div>').join('')+
+      '<div style="margin-top:10px;text-align:right"><button class="btn primary" onclick="scoreAndSetATR()">score &amp; set ATR</button></div>'+
+      '<div id="s_atrScore" style="margin-top:10px"></div>'+
+    '</div>'+
+    '<div class="card"><h3>objectives</h3>'+
+      (s.objectives&&s.objectives.length?'<table><tr><th>name</th><th>horizon</th><th class="r">target</th><th></th></tr>'+s.objectives.map((o,i)=>'<tr><td>'+esc(o.name)+'</td><td>'+o.horizon+' yr</td><td class="r">'+money(o.target)+'</td><td><button class="btn sm" onclick="rmObj('+i+')">×</button></td></tr>').join('')+'</table>':'<div class="empty-state" style="padding:8px">No objectives</div>')+
+      '<div style="margin-top:10px"><button class="btn sm" onclick="addObj()">+ add objective</button></div>'+
+    '</div>'+
+    '</div>';
+}
+
+let _likertAnswers=null;
+function setLikert(i,v){
+  const c=activeClient();if(!c)return;
+  if(!c.suitability.atrAnswers)c.suitability.atrAnswers=[];
+  c.suitability.atrAnswers[i]=v;
+  // visual update without full re-render
+  const grp=document.querySelectorAll('.likert')[i];
+  if(grp){grp.querySelectorAll('button').forEach((b,bi)=>b.classList.toggle('sel',bi+1===v))}
+}
+function scoreAndSetATR(){
+  const c=activeClient();
+  const ans=(c.suitability&&c.suitability.atrAnswers)||[];
+  if(ans.filter(x=>x).length<10){toast('answer all 10 questions first');return}
+  const atr=scoreATR(ans);
+  c.suitability.attitudeToRisk=atr;
+  $('#s_atr').value=atr;
+  $('#s_atrScore').innerHTML='<div style="padding:12px;background:var(--ink);border-left:3px solid var(--brass);border-radius:3px"><strong>Computed ATR: '+atr+' · '+RULES.atrAllocations[atr].label+'</strong><br><span style="font-size:11px;color:var(--cream-dim)">Target allocation: '+pct(RULES.atrAllocations[atr].eq)+' eq / '+pct(RULES.atrAllocations[atr].bond)+' bond / '+pct(RULES.atrAllocations[atr].cash)+' cash · save to apply</span></div>';
+}
+async function saveSuitability(){
+  const c=activeClient();if(!c)return;
+  c.suitability.attitudeToRisk=+$('#s_atr').value||4;
+  c.suitability.capacityForLoss=$('#s_cfl').value;
+  c.suitability.knowledgeExperience=$('#s_ke').value;
+  c.suitability.investmentHorizon=+$('#s_hor').value||20;
+  c.suitability.incomeNeeds=+$('#s_inc').value||0;
+  c.suitability.ethicalPreferences=$('#s_eth').value;
+  c.suitability.lastReviewAt=$('#s_lr').value?new Date($('#s_lr').value).getTime():c.suitability.lastReviewAt;
+  await saveClient(c,'Suitability updated');
+  toast('suitability saved');render();
+}
+async function addObj(){
+  const c=activeClient();if(!c.suitability.objectives)c.suitability.objectives=[];
+  const name=prompt('Objective name (e.g. retirement)');if(!name)return;
+  const horizon=+prompt('Horizon in years',20)||20;
+  const target=+prompt('Target £',100000)||0;
+  c.suitability.objectives.push({priority:c.suitability.objectives.length+1,name,horizon,target,notes:''});
+  await saveClient(c,'Objective added');render();
+}
+async function rmObj(i){
+  const c=activeClient();c.suitability.objectives.splice(i,1);await saveClient(c,'Objective removed');render();
+}
+
+// ════════════════════════════════════════════════════════════════
+// SCENARIOS · save snapshots + compare up to 3
+// ════════════════════════════════════════════════════════════════
+function scenarioSnapshot(c){
+  // capture the bits that matter
+  return{
+    profile:JSON.parse(JSON.stringify(c.financials||{})),
+    contribs:JSON.parse(JSON.stringify(c.contribs||{})),
+    holdings:JSON.parse(JSON.stringify(c.holdings||[])),
+    gains:JSON.parse(JSON.stringify(c.gains||{})),
+    suitability:JSON.parse(JSON.stringify(c.suitability||{})),
+    address:JSON.parse(JSON.stringify(c.address||{}))
+  };
+}
+function applyScenarioToClient(c,snap){
+  c.financials=Object.assign({},c.financials||{},snap.profile||{});
+  c.contribs=Object.assign({},c.contribs||{},snap.contribs||{});
+  c.holdings=snap.holdings||[];
+  c.gains=Object.assign({},c.gains||{},snap.gains||{});
+  c.suitability=Object.assign({},c.suitability||{},snap.suitability||{});
+  c.address=Object.assign({},c.address||{},snap.address||{});
+}
+// shim client for scenario calcs without mutating active client
+function scenarioClient(c,snap){
+  const sh=Object.assign({},c,{financials:Object.assign({},c.financials,snap.profile||{}),contribs:Object.assign({},c.contribs,snap.contribs||{}),holdings:snap.holdings||c.holdings,gains:Object.assign({},c.gains,snap.gains||{}),suitability:Object.assign({},c.suitability,snap.suitability||{}),address:Object.assign({},c.address,snap.address||{})});
+  return sh;
+}
+
+function viewScenarios(){
+  const c=activeClient();if(!c){$('#view').innerHTML='<div class="card"><div class="empty-state">No client selected.</div></div>';return}
+  const myScens=state.scenarios.filter(s=>s.clientId===c.id);
+  $('#view').innerHTML='<div class="section-h"><div><h2>Scenarios · '+esc(clientName(c))+'</h2><div class="sub">'+myScens.length+' saved · compare up to 3 side-by-side</div></div><div class="actions"><button class="btn primary" onclick="saveScenarioPrompt()">+ snapshot current</button>'+(state.compareScenarios.length>=2?'<button class="btn" onclick="renderCompare()">compare ('+state.compareScenarios.length+')</button>':'')+'</div></div>'+
+    '<div class="grid">'+
+    '<div class="card" style="grid-column:1/-1"><h3>saved scenarios</h3>'+
+      (myScens.length===0?'<div class="empty-state">No scenarios saved. Use <strong>+ snapshot current</strong> to capture this client\'s profile as a named scenario (e.g. "retire at 60", "retire at 67", "downsize").</div>':
+        myScens.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).map(s=>'<div class="scen-card '+(state.compareScenarios.indexOf(s.id)>=0?'cmp':'')+'">'+
+          '<div><div class="nm">'+esc(s.name)+'</div><div class="sub">created '+dateStr(s.createdAt)+' · '+(s.snapshot.holdings?s.snapshot.holdings.length:0)+' holdings</div></div>'+
+          '<div class="ops">'+
+            '<button class="btn sm" onclick="toggleCompare(\''+s.id+'\')">'+(state.compareScenarios.indexOf(s.id)>=0?'remove':'compare')+'</button>'+
+            '<button class="btn sm" onclick="loadScenario(\''+s.id+'\')">load</button>'+
+            '<button class="btn sm" onclick="renderScenarioDetail(\''+s.id+'\')">detail</button>'+
+            '<button class="btn sm danger" onclick="dropScenario(\''+s.id+'\')">×</button>'+
+          '</div></div>').join(''))+
+    '</div>'+
+    '<div class="card"><h3>quick presets</h3>'+
+      '<p style="font-size:12px;color:var(--cream-dim);margin-bottom:10px">Common scenarios derived from the current profile:</p>'+
+      '<button class="btn" onclick="presetScenario(\'retire60\')" style="width:100%;margin-bottom:5px">retire at 60</button>'+
+      '<button class="btn" onclick="presetScenario(\'retire67\')" style="width:100%;margin-bottom:5px">retire at 67</button>'+
+      '<button class="btn" onclick="presetScenario(\'retire70\')" style="width:100%;margin-bottom:5px">retire at 70</button>'+
+      '<button class="btn" onclick="presetScenario(\'downsize\')" style="width:100%;margin-bottom:5px">downsize property</button>'+
+      '<button class="btn" onclick="presetScenario(\'maxsipp\')" style="width:100%">max SIPP this year</button>'+
+    '</div>'+
+    '</div>'+
+    '<div id="cmpView"></div>';
+}
+
+async function saveScenarioPrompt(){
+  const c=activeClient();
+  const name=prompt('Scenario name (e.g. "retire at 60", "downsize")','Scenario '+(state.scenarios.filter(s=>s.clientId===c.id).length+1));
+  if(!name)return;
+  const sc={id:'sc_'+uid(),clientId:c.id,name,createdAt:Date.now(),updatedAt:Date.now(),snapshot:scenarioSnapshot(c)};
+  await saveScenario(sc,'Snapshot created from current profile');
+  // link to client
+  if(!c.links)c.links={};
+  if(!c.links.falladviserScenarios)c.links.falladviserScenarios=[];
+  c.links.falladviserScenarios.push(sc.id);
+  await saveClient(c,'Scenario link added');
+  toast('scenario saved');render();
+}
+async function presetScenario(kind){
+  const c=activeClient();const snap=scenarioSnapshot(c);
+  let name='Scenario';
+  if(kind==='retire60'){snap.profile.targetRetirementAge=60;name='Retire at 60'}
+  else if(kind==='retire67'){snap.profile.targetRetirementAge=67;name='Retire at 67'}
+  else if(kind==='retire70'){snap.profile.targetRetirementAge=70;name='Retire at 70'}
+  else if(kind==='downsize'){snap.profile.mainHomeValue=Math.max(0,(snap.profile.mainHomeValue||0)-150000);snap.profile.otherAssets=(snap.profile.otherAssets||0)+150000;name='Downsize property (£150k released)'}
+  else if(kind==='maxsipp'){const cfTotal=(snap.profile.carryForward||[0,0,0]).reduce((s,x)=>s+x,0);snap.contribs.sippThisYear=Math.min(60000+cfTotal,(snap.profile.income||0));name='Max SIPP with carry-forward'}
+  const sc={id:'sc_'+uid(),clientId:c.id,name,createdAt:Date.now(),updatedAt:Date.now(),snapshot:snap};
+  await saveScenario(sc,'Preset scenario created · '+kind);
+  toast('preset saved');render();
+}
+async function loadScenario(id){
+  const sc=state.scenarios.find(x=>x.id===id);if(!sc)return;
+  if(!confirm('Load scenario "'+sc.name+'" into active client profile? This overwrites current financials, contribs, holdings.'))return;
+  const c=activeClient();
+  applyScenarioToClient(c,sc.snapshot);
+  await saveClient(c,'Loaded scenario '+sc.name);
+  toast('loaded');render();
+}
+function toggleCompare(id){
+  const ix=state.compareScenarios.indexOf(id);
+  if(ix>=0)state.compareScenarios.splice(ix,1);
+  else{if(state.compareScenarios.length>=3){toast('max 3 in compare');return}state.compareScenarios.push(id)}
+  render();
+}
+async function dropScenario(id){
+  if(!confirm('Delete scenario?'))return;
+  await delScenario(id);
+  state.compareScenarios=state.compareScenarios.filter(x=>x!==id);
+  toast('deleted');render();
+}
+function renderScenarioDetail(id){
+  const sc=state.scenarios.find(x=>x.id===id);if(!sc)return;
+  const c=activeClient();
+  const shim=scenarioClient(c,sc.snapshot);
+  const t=totalTaxFor(shim);const pa=portfolioAnalysisFor(shim);
+  openModalCustom('Scenario · '+esc(sc.name),
+    '<div class="kpi"><span class="l">Retirement age</span><span class="v">'+(sc.snapshot.profile.targetRetirementAge||'-')+'</span></div>'+
+    '<div class="kpi"><span class="l">Income</span><span class="v">'+money(sc.snapshot.profile.income||0)+'</span></div>'+
+    '<div class="kpi"><span class="l">Marginal rate</span><span class="v amber">'+pct(t.marginalRate)+'</span></div>'+
+    '<div class="kpi"><span class="l">Total tax</span><span class="v red">'+money(t.totalLiability)+'</span></div>'+
+    '<div class="kpi"><span class="l">Portfolio</span><span class="v brass">'+money(pa.total)+'</span></div>'+
+    '<div class="kpi"><span class="l">SIPP this year</span><span class="v">'+money(sc.snapshot.contribs.sippThisYear||0)+'</span></div>'+
+    '<div class="actions"><button class="btn" onclick="closeModal()">close</button><button class="btn primary" onclick="closeModal();loadScenario(\''+id+'\')">load</button></div>');
+}
+function renderCompare(){
+  const c=activeClient();
+  if(state.compareScenarios.length<2){toast('select 2-3 scenarios first');return}
+  const scens=state.compareScenarios.map(id=>state.scenarios.find(s=>s.id===id)).filter(Boolean);
+  const rows=scens.map(sc=>{
+    const shim=scenarioClient(c,sc.snapshot);
+    const t=totalTaxFor(shim);const pa=portfolioAnalysisFor(shim);const cf=carryForwardAA(shim);
+    const yrsToRetire=Math.max(0,(sc.snapshot.profile.targetRetirementAge||67)-(sc.snapshot.profile.age||0));
+    const pot=(sc.snapshot.holdings||[]).filter(h=>h.taxWrapper==='sipp'||h.taxWrapper==='workplace').reduce((s,h)=>s+(+h.value||0),0);
+    const proj5=pensionProjection(pot,((sc.snapshot.contribs.sippThisYear||0)+(sc.snapshot.contribs.workplacePensionAnnual||0)+(sc.snapshot.contribs.salarySacrifice||0)+(sc.snapshot.profile.income||0)*(sc.snapshot.profile.employerContribPct||0)),yrsToRetire,0.05);
+    return{sc,t,pa,cf,yrsToRetire,proj5};
+  });
+  const html='<div class="card" style="margin-top:14px"><h3>Compare ('+scens.length+')</h3>'+
+    '<table><tr><th>metric</th>'+rows.map(r=>'<th>'+esc(r.sc.name)+'</th>').join('')+'</tr>'+
+    '<tr><td>retirement age</td>'+rows.map(r=>'<td>'+(r.sc.snapshot.profile.targetRetirementAge||'-')+'</td>').join('')+'</tr>'+
+    '<tr><td>years to retire</td>'+rows.map(r=>'<td>'+r.yrsToRetire+'</td>').join('')+'</tr>'+
+    '<tr><td>income</td>'+rows.map(r=>'<td class="r">'+money(r.sc.snapshot.profile.income||0)+'</td>').join('')+'</tr>'+
+    '<tr><td>marginal rate</td>'+rows.map(r=>'<td class="r">'+pct(r.t.marginalRate)+'</td>').join('')+'</tr>'+
+    '<tr><td>total tax</td>'+rows.map(r=>'<td class="r">'+money(r.t.totalLiability)+'</td>').join('')+'</tr>'+
+    '<tr><td>net</td>'+rows.map(r=>'<td class="r">'+money(r.t.grossIncome-r.t.totalLiability)+'</td>').join('')+'</tr>'+
+    '<tr><td>portfolio (snapshot)</td>'+rows.map(r=>'<td class="r">'+money(r.pa.total)+'</td>').join('')+'</tr>'+
+    '<tr><td>SIPP this year</td>'+rows.map(r=>'<td class="r">'+money(r.sc.snapshot.contribs.sippThisYear||0)+'</td>').join('')+'</tr>'+
+    '<tr><td>carry-forward</td>'+rows.map(r=>'<td class="r">'+money(r.cf.available)+'</td>').join('')+'</tr>'+
+    '<tr><td>projected pension @ 5%</td>'+rows.map(r=>'<td class="r brass">'+money(r.proj5)+'</td>').join('')+'</tr>'+
+    '<tr><td>annual drawdown (4%)</td>'+rows.map(r=>'<td class="r">'+money(r.proj5*0.04)+'</td>').join('')+'</tr>'+
+    '</table>'+
+    '<div style="margin-top:10px"><button class="btn" onclick="state.compareScenarios=[];render()">clear compare</button></div>'+
+    '</div>';
+  $('#cmpView').innerHTML=html;
+}
+
+// ════════════════════════════════════════════════════════════════
+// Q&A
+// ════════════════════════════════════════════════════════════════
+function viewQA(){
+  const c=activeClient();
+  $('#view').innerHTML='<div class="section-h"><div><h2>Q &amp; A</h2><div class="sub">'+(c?'context · '+esc(clientName(c)):'no active client')+' · T0 deterministic · T3 optional</div></div><div class="actions"><button class="btn sm" onclick="state.chat=[];saveMeta();viewQA()">clear</button></div></div>'+
+    '<div class="card">'+
+    '<div class="chat" id="chat">'+renderChat()+'</div>'+
+    '<div class="chat-input"><input id="qInput" placeholder="ask · ISA vs SIPP · CGT on £15k · HICBC · marriage allowance · tapered AA · Scotland bands · Bed&amp;ISA · withdrawal sequence £30k"><button class="btn primary" onclick="askQuestion()">ask</button></div>'+
+    '<div style="margin-top:10px;font-size:11px;color:var(--cream-muted);font-family:var(--mono)">try: "marriage allowance" · "HICBC" · "tapered AA" · "carry-forward" · "BPR" · "Scotland tax bands" · "bed and ISA" · "withdrawal sequence £30k"</div>'+
+    '</div>';
+  const q=$('#qInput');if(q)q.addEventListener('keydown',e=>{if(e.key==='Enter')askQuestion()});
+}
+function renderChat(){
+  if(!state.chat.length)return '<div style="text-align:center;padding:30px;color:var(--cream-muted);font-style:italic">No questions yet. Ask anything about UK finances or the active client.</div>';
+  return state.chat.map(m=>'<div class="msg '+m.role+'">'+esc(m.text).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')+(m.src?'<div class="src">'+esc(m.src)+'</div>':'')+'</div>').join('');
+}
+async function askQuestion(){
+  const q=$('#qInput').value.trim();if(!q)return;
+  state.chat.push({role:'user',text:q});$('#qInput').value='';
+  $('#chat').innerHTML=renderChat()+'<div class="msg bot"><em style="color:var(--cream-muted)">thinking…</em></div>';
+  $('#chat').scrollTop=$('#chat').scrollHeight;
+  const ans=await answerQuestion(q);
+  state.chat.push({role:'bot',text:ans.text,src:ans.src});
+  await saveMeta();$('#chat').innerHTML=renderChat();$('#chat').scrollTop=$('#chat').scrollHeight;
+}
+
+// ════════════════════════════════════════════════════════════════
+// REPORTS
+// ════════════════════════════════════════════════════════════════
+function viewReports(){
+  const c=activeClient();
+  $('#view').innerHTML='<div class="section-h"><div><h2>Reports</h2><div class="sub">'+(c?esc(clientName(c)):'firm-wide')+' · annual review · exports</div></div></div>'+
+    '<div class="grid">'+
+    (c?'<div class="card" style="border-color:var(--brass)"><h3>annual review pack</h3>'+
+      '<p style="font-size:13px;color:var(--cream-dim);margin-bottom:12px">Generate a COBS-aligned suitability review pack for <strong>'+esc(clientName(c))+'</strong>. Hands off to FallPaper if open.</p>'+
+      '<button class="btn primary" onclick="generateReviewPack()">↓ generate &amp; download .md</button>'+
+      '<button class="btn" onclick="sendToFallPaper()">→ send to FallPaper</button>'+
+    '</div>':'')+
+    (c?'<div class="card"><h3>tax summary</h3>'+
+      '<p style="font-size:13px;color:var(--cream-dim);margin-bottom:12px">Markdown summary for '+TAX_YEAR+' covering income, bands, allowances, recommendations.</p>'+
+      '<button class="btn" onclick="exportTaxSummary()">↓ .md</button>'+
+    '</div>':'')+
+    (c?'<div class="card"><h3>portfolio export</h3>'+
+      '<p style="font-size:13px;color:var(--cream-dim);margin-bottom:12px">CSV holdings + lots + disposals.</p>'+
+      '<button class="btn" onclick="exportPortfolioCSV()">↓ holdings.csv</button>'+
+      '<button class="btn sm" onclick="exportLotsCSV()">↓ lots.csv</button>'+
+      '<button class="btn sm" onclick="exportDisposalsCSV()">↓ disposals.csv</button>'+
+    '</div>':'')+
+    '<div class="card"><h3>full state export</h3>'+
+      '<p style="font-size:13px;color:var(--cream-dim);margin-bottom:12px">Complete JSON dump of firm, advisers, all clients, scenarios (no chat, no keys). Backup &amp; import.</p>'+
+      '<button class="btn" onclick="exportFullState()">↓ state.json</button>'+
+      '<button class="btn ghost sm" onclick="importState()">↑ import</button>'+
+    '</div>'+
+    '<div class="card"><h3>audit chain · '+state.audit.length+' entries</h3>'+
+      '<p style="font-size:13px;color:var(--cream-dim);margin-bottom:12px">prevHash + docHash + reasoning · Mansoor P3 extended schema · 7-year FCA retention.</p>'+
+      '<button class="btn" onclick="exportAuditChain()">↓ audit.json</button>'+
+      '<button class="btn sm" onclick="state.settings.auditChain=!state.settings.auditChain;saveSettingsRec();render()">'+(state.settings.auditChain?'disable':'enable')+' chain</button>'+
+    '</div>'+
+    '<div class="card"><h3>firm-wide CSV</h3>'+
+      '<p style="font-size:13px;color:var(--cream-dim);margin-bottom:12px">All active clients as a single CSV — names, advisers, ATR, risk, AUM, review status.</p>'+
+      '<button class="btn" onclick="exportFirmCSV()">↓ firm-clients.csv</button>'+
+    '</div>'+
+    '</div>';
+}
+
+function downloadFile(name,content,mime){
+  const blob=new Blob([content],{type:mime});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+
+function generateReviewPack(){
+  const c=activeClient();if(!c)return;
+  const t=totalTaxFor(c);const pa=portfolioAnalysisFor(c);const sugg=generateSuggestionsFor(c);
+  const cf=carryForwardAA(c);const taa=taperedAA(c);const iht=ihtEstimate(c);
+  const ad=state.advisers.find(a=>a.id===c.adviserId);
+  const md='# Annual review · '+clientName(c)+'\n\n'+
+    '**Firm:** '+state.firm.name+' (FCA '+state.firm.fcaRefNo+')\n\n'+
+    '**Adviser:** '+(ad?ad.name+' (SM&CR '+(ad.smcrRole||'-')+')':'-')+'\n\n'+
+    '**Date:** '+new Date().toISOString().slice(0,10)+'\n\n'+
+    '**Review period:** '+TAX_YEAR+'\n\n---\n\n## 1. Client profile\n\n'+
+    '- Age: '+(clientAge(c)||'-')+' · Region: '+clientRegion(c)+'\n'+
+    '- Target retirement: '+((c.financials&&c.financials.targetRetirementAge)||67)+'\n'+
+    '- KYC status: '+(c.kyc&&c.kyc.status)+'\n'+
+    '- Risk grade: '+(c.kyc&&c.kyc.riskGrade)+'\n'+
+    '- PEP: '+(c.kyc&&c.kyc.pepFlag?'YES':'No')+'\n'+
+    '- Vulnerable customer: '+(c.kyc&&c.kyc.vulnerableCustomerFlag?'YES — '+(c.kyc.vulnerabilityCategory||'-'):'No')+'\n\n'+
+    '## 2. Suitability assessment (COBS 9)\n\n'+
+    '- ATR: **'+((c.suitability&&c.suitability.attitudeToRisk)||4)+' · '+RULES.atrAllocations[(c.suitability&&c.suitability.attitudeToRisk)||4].label+'**\n'+
+    '- Capacity for loss: '+((c.suitability&&c.suitability.capacityForLoss)||'medium')+'\n'+
+    '- Knowledge & experience: '+((c.suitability&&c.suitability.knowledgeExperience)||'medium')+'\n'+
+    '- Horizon: '+((c.suitability&&c.suitability.investmentHorizon)||20)+' years\n'+
+    '- Income needs: '+money((c.suitability&&c.suitability.incomeNeeds)||0)+'/yr\n'+
+    '- Last formal review: '+((c.suitability&&c.suitability.lastReviewAt)?dateStr(c.suitability.lastReviewAt):'Never')+'\n\n'+
+    '## 3. Tax position · '+TAX_YEAR+'\n\n'+
+    '| line | £ |\n|---|---:|\n'+
+    '| Income | '+money((c.financials&&c.financials.income)||0)+' |\n'+
+    '| Income tax | '+money(t.incomeTax)+' |\n'+
+    '| NI | '+money(t.ni)+' |\n'+
+    '| Dividend tax | '+money(t.dividendTax)+' |\n'+
+    '| Savings tax | '+money(t.savingsTax)+' |\n'+
+    '| CGT | '+money(t.cgt)+' |\n'+
+    '| HICBC | '+money(t.hicbc)+' |\n'+
+    '| **Total tax** | **'+money(t.totalLiability)+'** |\n'+
+    '| Marginal rate | '+pct(t.marginalRate)+' |\n'+
+    '| Effective rate | '+pct(t.effectiveRate)+' |\n\n'+
+    '## 4. Allowance usage\n\n'+
+    '| allowance | limit £ | used £ |\n|---|---:|---:|\n'+
+    '| ISA | '+money(RULES.isaAllowance)+' | '+money(((c.contribs&&c.contribs.isaThisYear)||0)+((c.contribs&&c.contribs.lisaThisYear)||0))+' |\n'+
+    '| LISA | '+money(RULES.lisaAllowance)+' | '+money((c.contribs&&c.contribs.lisaThisYear)||0)+' |\n'+
+    '| Pension AA'+(taa.tapered?' (tapered)':'')+' | '+money(taa.aa)+' | '+money(((c.contribs&&c.contribs.sippThisYear)||0)+((c.contribs&&c.contribs.workplacePensionAnnual)||0)+((c.contribs&&c.contribs.salarySacrifice)||0))+' |\n'+
+    '| Carry-forward 3yr | '+money(cf.available)+' | — |\n'+
+    '| CGT | '+money(RULES.cgtAllowance)+' | '+money(((c.gains&&c.gains.cgtRealisedThisYear)||0))+' |\n'+
+    '| Dividend allowance | '+money(RULES.dividendAllowance)+' | '+money(Math.min((c.financials&&c.financials.dividendIncome)||0,RULES.dividendAllowance))+' |\n\n'+
+    '## 5. Portfolio · '+money(pa.total)+'\n\n'+
+    '- Equity '+pct(pa.eq)+' · Bond '+pct(pa.bond)+' · Cash '+pct(pa.cash)+' · Alt '+pct(pa.alt)+'\n'+
+    '- ATR target: '+pa.target.label+' ('+pct(pa.target.eq)+' eq)\n'+
+    '- Risk score: '+pa.riskScore.toFixed(1)+'/5\n'+
+    '- '+(c.holdings||[]).length+' positions\n\n'+
+    '## 6. Estate · IHT\n\n'+
+    '- Net estate: '+money(iht.net)+'\n'+
+    '- NRB: '+money(iht.nrb)+' · RNRB: '+money(iht.rnrb)+'\n'+
+    '- BPR/APR relief: '+money(iht.bprAprRelief)+'\n'+
+    '- Estimated IHT: **'+money(iht.tax)+'**\n\n'+
+    '## 7. Recommendations\n\n'+
+    sugg.map(s=>'### ['+s.prio.toUpperCase()+'] '+s.title+'\n\n'+s.why).join('\n\n')+'\n\n'+
+    '## 8. Engagement\n\n'+
+    '- Type: '+(c.engagement&&c.engagement.type)+'\n'+
+    '- Fee basis: '+(c.engagement&&c.engagement.feeBasis)+'\n'+
+    '- Next review due: '+dateStr(nextReviewDueFor(c))+'\n\n'+
+    '---\n\n'+
+    '*FallAdviser v'+VERSION+' is informational only · not regulated FCA advice · UK '+TAX_YEAR+' tax year · always verify with HMRC or an authorised adviser.*\n\n'+
+    'Generated: '+new Date().toISOString().slice(0,16).replace('T',' ');
+  downloadFile('review-'+clientName(c).replace(/\s+/g,'_')+'-'+TAX_YEAR+'.md',md,'text/markdown');
+  audit('review.generated','Annual review pack generated',{clientId:c.id,year:TAX_YEAR});
+  toast('review pack downloaded');
+}
+
+function sendToFallPaper(){
+  const c=activeClient();if(!c)return;
+  // best-effort handoff via BroadcastChannel
+  try{
+    const ch=new BroadcastChannel('fall-client');
+    ch.postMessage({v:1,type:'review.generate',ts:Date.now(),source:TOOLNAME,payload:{clientId:c.id,scenarioId:null,advice:'annual review',adviserId:c.adviserId,firmName:state.firm.name}});
+    ch.close();
+  }catch(e){}
+  // also try direct iframe postMessage
+  const target=document.querySelector('iframe[src*="fallpaper"]');
+  if(target)target.contentWindow.postMessage({target:'fallpaper',action:'review.generate',clientId:c.id,clientName:clientName(c)},'*');
+  toast('handoff sent to FallPaper');
+}
+
+function exportTaxSummary(){
+  const c=activeClient();if(!c)return;
+  const t=totalTaxFor(c);const pa=portfolioAnalysisFor(c);const sugg=generateSuggestionsFor(c);
+  const md='# Tax summary · '+clientName(c)+' · '+TAX_YEAR+'\n\n'+
+    '| line | £ |\n|---|---:|\n'+
+    '| Income | '+money((c.financials&&c.financials.income)||0)+' |\n'+
+    '| Income tax | '+money(t.incomeTax)+' |\n'+
+    '| NI | '+money(t.ni)+' |\n'+
+    '| Dividend | '+money(t.dividendTax)+' |\n'+
+    '| Savings | '+money(t.savingsTax)+' |\n'+
+    '| CGT | '+money(t.cgt)+' |\n'+
+    '| HICBC | '+money(t.hicbc)+' |\n'+
+    '| **Total** | **'+money(t.totalLiability)+'** |\n\n'+
+    '## Recommendations\n\n'+sugg.map(s=>'- ['+s.prio+'] '+s.title).join('\n')+'\n\n'+
+    '*FallAdviser v'+VERSION+' · informational only · '+new Date().toISOString().slice(0,10)+'*';
+  downloadFile('tax-'+clientName(c).replace(/\s+/g,'_')+'-'+TAX_YEAR+'.md',md,'text/markdown');toast('exported');
+}
+function exportPortfolioCSV(){
+  const c=activeClient();if(!c)return;
+  const rows=[['label','value','asset_class','tax_wrapper','cost_basis']];
+  (c.holdings||[]).forEach(h=>rows.push([h.label||'',h.value||0,(ASSET_CLASSES[h.assetClass]&&ASSET_CLASSES[h.assetClass].label)||h.assetClass,(TAX_WRAPPERS[h.taxWrapper]&&TAX_WRAPPERS[h.taxWrapper].label)||h.taxWrapper,h.costBasis||0]));
+  const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');
+  downloadFile('holdings-'+clientName(c).replace(/\s+/g,'_')+'.csv',csv,'text/csv');toast('exported');
+}
+function exportLotsCSV(){
+  const c=activeClient();if(!c)return;
+  const rows=[['holding','date','units','cost_basis','wrapper']];
+  (c.holdings||[]).forEach(h=>(h.lots||[]).forEach(l=>rows.push([h.label||'',l.date||'',l.units||0,l.costBasis||0,l.wrapper||''])));
+  const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');
+  downloadFile('lots-'+clientName(c).replace(/\s+/g,'_')+'.csv',csv,'text/csv');toast('exported');
+}
+function exportDisposalsCSV(){
+  const c=activeClient();if(!c)return;
+  const rows=[['date','holding','units','price_per_unit','realised_gain']];
+  ((c.gains&&c.gains.disposals)||[]).forEach(d=>rows.push([d.date,d.holdingLabel,d.units,d.pricePerUnit,d.realisedGain]));
+  const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');
+  downloadFile('disposals-'+clientName(c).replace(/\s+/g,'_')+'.csv',csv,'text/csv');toast('exported');
+}
+function exportFullState(){
+  const e={schema:'falladviser@'+VERSION,exported:new Date().toISOString(),tax_year:TAX_YEAR,firm:state.firm,advisers:state.advisers,clients:state.clients,scenarios:state.scenarios,settings:Object.assign({},state.settings,{anthropicKey:'',openaiKey:'',geminiKey:'',openrouterKey:''})};
+  downloadFile('falladviser-state-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(e,null,2),'application/json');toast('exported (keys stripped)');
+}
+function exportAuditChain(){
+  downloadFile('audit-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify({schema:'falladviser-audit@2',exported:new Date().toISOString(),firmId:state.firm&&state.firm.id,entries:state.audit},null,2),'application/json');toast('audit chain exported');
+}
+function exportFirmCSV(){
+  const rows=[['name','adviser','atr','risk','aum','income','review_due','review_status']];
+  state.clients.filter(c=>!c.archivedAt).forEach(c=>{
+    const ad=state.advisers.find(a=>a.id===c.adviserId);
+    const pa=portfolioAnalysisFor(c);
+    rows.push([clientName(c),(ad&&ad.name)||'',(c.suitability&&c.suitability.attitudeToRisk)||4,(c.kyc&&c.kyc.riskGrade)||'',pa.total,(c.financials&&c.financials.income)||0,dateStr(nextReviewDueFor(c)),reviewStatus(c)]);
+  });
+  const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');
+  downloadFile('firm-clients-'+new Date().toISOString().slice(0,10)+'.csv',csv,'text/csv');toast('exported');
+}
+function importState(){
+  const i=document.createElement('input');i.type='file';i.accept='.json';
+  i.onchange=async e=>{
+    const f=e.target.files[0];if(!f)return;
+    const text=await f.text();
+    try{
+      const d=JSON.parse(text);
+      if(!confirm('Replace local firm/advisers/clients/scenarios with imported data? Audit chain preserved.'))return;
+      if(d.firm){state.firm=d.firm;await idbPut('firms',d.firm)}
+      for(const a of(d.advisers||[])){await saveAdviser(a,'imported',true)}
+      for(const c of(d.clients||[])){await saveClient(c,'imported',true)}
+      for(const sc of(d.scenarios||[])){await saveScenario(sc,'imported')}
+      toast('imported');render();
+    }catch(err){alert('invalid JSON: '+err.message)}
+  };
+  i.click();
+}
+
+// ════════════════════════════════════════════════════════════════
+// FIRM · advisers list, firm settings
+// ════════════════════════════════════════════════════════════════
+function viewFirm(){
+  const f=state.firm;
+  $('#view').innerHTML='<div class="section-h"><div><h2>Firm · '+esc(f.name)+'</h2><div class="sub">FCA '+esc(f.fcaRefNo||'-')+' · '+state.advisers.filter(a=>a.status==='active').length+' active advisers</div></div><div class="actions"><button class="btn primary" onclick="saveFirmEdit()">save firm</button><button class="btn" onclick="addAdviserModal()">+ adviser</button></div></div>'+
+    '<div class="grid">'+
+    '<div class="card"><h3>firm details</h3>'+
+      '<div class="row"><div class="field"><label>name</label><input id="fe_name" value="'+esc(f.name)+'"></div><div class="field"><label>trading name</label><input id="fe_trade" value="'+esc(f.tradingName||'')+'"></div></div>'+
+      '<div class="row"><div class="field"><label>FCA ref</label><input id="fe_fca" value="'+esc(f.fcaRefNo||'')+'"></div><div class="field"><label>companies house</label><input id="fe_ch" value="'+esc(f.companiesHouseNo||'')+'"></div></div>'+
+      '<div class="row"><div class="field"><label>VAT no</label><input id="fe_vat" value="'+esc(f.vatNumber||'')+'"></div><div class="field"><label>professional body</label><select id="fe_body">'+['CISI','PFS','STEP','Other'].map(o=>'<option'+(f.professionalBody===o?' selected':'')+'>'+o+'</option>').join('')+'</select></div></div>'+
+      '<div class="row"><div class="field"><label>PI insurer</label><input id="fe_pi" value="'+esc(f.piInsurer||'')+'"></div><div class="field"><label>PI policy</label><input id="fe_pip" value="'+esc(f.piPolicyNo||'')+'"></div></div>'+
+    '</div>'+
+    '<div class="card"><h3>registered address</h3>'+
+      '<div class="field"><label>line 1</label><input id="fe_a1" value="'+esc(f.registeredAddress.line1||'')+'"></div>'+
+      '<div class="field"><label>line 2</label><input id="fe_a2" value="'+esc(f.registeredAddress.line2||'')+'"></div>'+
+      '<div class="row"><div class="field"><label>city</label><input id="fe_city" value="'+esc(f.registeredAddress.city||'')+'"></div><div class="field"><label>postcode</label><input id="fe_pc" value="'+esc(f.registeredAddress.postcode||'')+'"></div></div>'+
+    '</div>'+
+    '<div class="card"><h3>operating adviser</h3>'+
+      '<p style="font-size:12px;color:var(--cream-dim);margin-bottom:8px">Who is currently signed in / acting? Drives audit log.</p>'+
+      '<div class="field"><label>current adviser</label><select id="fe_curad" onchange="setCurrentAdviser(this.value)">'+state.advisers.filter(a=>a.status==='active').map(a=>'<option value="'+a.id+'"'+(state.settings.currentAdviserId===a.id?' selected':'')+'>'+esc(a.name)+'</option>').join('')+'</select></div>'+
+    '</div>'+
+    '<div class="card" style="grid-column:1/-1"><h3>advisers</h3>'+
+      '<table><tr><th>name</th><th>email</th><th>FCA ref</th><th>SM&CR</th><th>status</th><th class="r">clients</th><th></th></tr>'+
+      state.advisers.map(a=>{
+        const cnt=state.clients.filter(c=>!c.archivedAt&&c.adviserId===a.id).length;
+        return '<tr><td>'+esc(a.name||'-')+'</td><td>'+esc(a.email||'-')+'</td><td>'+esc(a.fcaRefNo||'-')+'</td><td>'+esc(a.smcrRole||'-')+'</td><td>'+esc(a.status||'-')+'</td><td class="r">'+cnt+'</td>'+
+          '<td><button class="btn sm" onclick="editAdviser(\''+a.id+'\')">edit</button> '+(a.status==='active'?'<button class="btn sm danger" onclick="suspendAdviser(\''+a.id+'\')">suspend</button>':'<button class="btn sm" onclick="activateAdviser(\''+a.id+'\')">activate</button>')+'</td></tr>';
+      }).join('')+'</table>'+
+    '</div>'+
+    '</div>';
+}
+async function saveFirmEdit(){
+  const f=state.firm;
+  f.name=$('#fe_name').value;f.tradingName=$('#fe_trade').value;f.fcaRefNo=$('#fe_fca').value;f.companiesHouseNo=$('#fe_ch').value;
+  f.vatNumber=$('#fe_vat').value;f.professionalBody=$('#fe_body').value;
+  f.piInsurer=$('#fe_pi').value;f.piPolicyNo=$('#fe_pip').value;
+  f.registeredAddress.line1=$('#fe_a1').value;f.registeredAddress.line2=$('#fe_a2').value;
+  f.registeredAddress.city=$('#fe_city').value;f.registeredAddress.postcode=$('#fe_pc').value;
+  await saveFirm();toast('firm saved');render();
+}
+async function setCurrentAdviser(id){state.settings.currentAdviserId=id;await saveSettingsRec();toast('switched');}
+function addAdviserModal(){
+  openModalCustom('Add adviser',
+    '<div class="row"><div class="field"><label>name *</label><input id="na_name"></div><div class="field"><label>email</label><input id="na_email" type="email"></div></div>'+
+    '<div class="row"><div class="field"><label>phone</label><input id="na_phone"></div><div class="field"><label>FCA ref</label><input id="na_fca"></div></div>'+
+    '<div class="row"><div class="field"><label>SM&amp;CR role</label><select id="na_smcr"><option>SMF1</option><option>SMF3</option><option>SMF22</option><option>SMF27</option><option>SMF16</option><option>SMF17</option><option>Adviser</option></select></div>'+
+    '<div class="field"><label>status</label><select id="na_st"><option value="active">Active</option><option value="suspended">Suspended</option></select></div></div>'+
+    '<div class="actions"><button class="btn" onclick="closeModal()">cancel</button><button class="btn primary" onclick="commitAddAdviser()">add</button></div>');
+}
+async function commitAddAdviser(){
+  const name=$('#na_name').value.trim();if(!name){toast('name required');return}
+  const a=newBlankAdviser();
+  a.name=name;a.email=$('#na_email').value;a.phone=$('#na_phone').value;a.fcaRefNo=$('#na_fca').value;a.smcrRole=$('#na_smcr').value;a.status=$('#na_st').value;
+  await saveAdviser(a,'New adviser added');
+  broadcast('adviser.created',a);
+  closeModal();toast('adviser added');render();
+}
+function editAdviser(id){
+  const a=state.advisers.find(x=>x.id===id);if(!a)return;
+  openModalCustom('Edit adviser',
+    '<div class="row"><div class="field"><label>name</label><input id="ea_name" value="'+esc(a.name||'')+'"></div><div class="field"><label>email</label><input id="ea_email" value="'+esc(a.email||'')+'"></div></div>'+
+    '<div class="row"><div class="field"><label>phone</label><input id="ea_phone" value="'+esc(a.phone||'')+'"></div><div class="field"><label>FCA ref</label><input id="ea_fca" value="'+esc(a.fcaRefNo||'')+'"></div></div>'+
+    '<div class="row"><div class="field"><label>SM&amp;CR role</label><input id="ea_smcr" value="'+esc(a.smcrRole||'')+'"></div><div class="field"><label>status</label><select id="ea_st"><option value="active"'+(a.status==='active'?' selected':'')+'>Active</option><option value="suspended"'+(a.status==='suspended'?' selected':'')+'>Suspended</option><option value="left"'+(a.status==='left'?' selected':'')+'>Left</option></select></div></div>'+
+    '<div class="actions"><button class="btn" onclick="closeModal()">cancel</button><button class="btn primary" onclick="commitEditAdviser(\''+id+'\')">save</button></div>');
+}
+async function commitEditAdviser(id){
+  const a=state.advisers.find(x=>x.id===id);if(!a)return;
+  a.name=$('#ea_name').value;a.email=$('#ea_email').value;a.phone=$('#ea_phone').value;a.fcaRefNo=$('#ea_fca').value;a.smcrRole=$('#ea_smcr').value;a.status=$('#ea_st').value;
+  await saveAdviser(a,'Adviser edited');closeModal();toast('saved');render();
+}
+async function suspendAdviser(id){const a=state.advisers.find(x=>x.id===id);if(!a)return;a.status='suspended';await saveAdviser(a,'Adviser suspended');render()}
+async function activateAdviser(id){const a=state.advisers.find(x=>x.id===id);if(!a)return;a.status='active';await saveAdviser(a,'Adviser activated');render()}
+
+// ════════════════════════════════════════════════════════════════
+// MODALS · settings + custom + palette
+// ════════════════════════════════════════════════════════════════
+function openModal(kind){
+  if(kind==='settings'){
+    $('#modalTitle').textContent='Settings · cascade keys + audit + adviser';
+    $('#modalBody').innerHTML='<p style="color:var(--cream-dim);font-size:12px;margin-bottom:10px">FallAdviser v2 works fully offline with rules-based answers (T0). For nuanced Q&amp;A grounded in active-client context, add an API key below. <a href="https://aistudio.google.com/apikey" target="_blank">Gemini is free</a>. Keys stay on device.</p>'+
+      '<div class="field"><label>operating adviser</label><select id="stCurAd">'+state.advisers.filter(a=>a.status==='active').map(a=>'<option value="'+a.id+'"'+(state.settings.currentAdviserId===a.id?' selected':'')+'>'+esc(a.name)+'</option>').join('')+'</select></div>'+
+      '<div class="field"><label>anthropic · claude</label><input id="stAnth" type="password" value="'+esc(state.settings.anthropicKey)+'" placeholder="sk-ant-…"></div>'+
+      '<div class="field"><label>gemini · free</label><input id="stGem" type="password" value="'+esc(state.settings.geminiKey)+'"></div>'+
+      '<div class="field"><label>openai · gpt</label><input id="stOAI" type="password" value="'+esc(state.settings.openaiKey)+'"></div>'+
+      '<div class="field"><label>openrouter</label><input id="stOR" type="password" value="'+esc(state.settings.openrouterKey)+'"></div>'+
+      '<div class="field"><label><input type="checkbox" id="stAud" '+(state.settings.auditChain?'checked':'')+'> Mansoor P3 extended audit chain · per shared schema · 7yr FCA retention</label></div>'+
+      '<div style="margin-top:14px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.1em">FallAdviser v'+VERSION+' · prime '+PRIME+' · UK '+TAX_YEAR+' · IFA bundle · MIT</div>'+
+      '<div class="actions"><button class="btn" onclick="closeModal()">cancel</button><button class="btn primary" onclick="saveSettingsModal()">save</button></div>';
+  }else if(kind==='disposal'){
+    openDisposalModal();return;
+  }
+  $('#modal').classList.add('open');
+}
+function openModalCustom(title,bodyHtml){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=bodyHtml;$('#modal').classList.add('open')}
+function closeModal(){$('#modal').classList.remove('open')}
+async function saveSettingsModal(){
+  state.settings.currentAdviserId=$('#stCurAd').value;
+  state.settings.anthropicKey=$('#stAnth').value;state.settings.geminiKey=$('#stGem').value;state.settings.openaiKey=$('#stOAI').value;state.settings.openrouterKey=$('#stOR').value;
+  state.settings.auditChain=$('#stAud').checked;
+  Cascade._p=undefined;
+  await saveSettingsRec();await updateTierBadge();closeModal();toast('saved');
+}
+
+// PALETTE
+function openPalette(){$('#palette').classList.add('open');setTimeout(()=>$('#pInput').focus(),50);renderPaletteSuggestions('')}
+function closePalette(){$('#palette').classList.remove('open');$('#pInput').value=''}
+function renderPaletteSuggestions(q){
+  const body=$('#pBody');
+  if(!q.trim()){
+    body.innerHTML=
+      '<div class="palette-row" onclick="askPalette(\'ISA vs SIPP for active client\')"><div>£</div><div>ISA vs SIPP for active client</div></div>'+
+      '<div class="palette-row" onclick="askPalette(\'marriage allowance eligibility\')"><div>£</div><div>marriage allowance eligibility</div></div>'+
+      '<div class="palette-row" onclick="askPalette(\'HICBC charge\')"><div>£</div><div>HICBC charge</div></div>'+
+      '<div class="palette-row" onclick="askPalette(\'tapered annual allowance\')"><div>£</div><div>tapered AA</div></div>'+
+      '<div class="palette-row" onclick="askPalette(\'carry-forward AA\')"><div>£</div><div>carry-forward AA</div></div>'+
+      '<div class="palette-row" onclick="askPalette(\'BPR APR post-2026\')"><div>£</div><div>BPR / APR post-2026 reform</div></div>'+
+      '<div class="palette-row" onclick="askPalette(\'Scotland tax bands\')"><div>£</div><div>Scotland tax bands</div></div>'+
+      '<div class="palette-row" onclick="askPalette(\'bed and ISA opportunities\')"><div>£</div><div>Bed &amp; ISA opportunities</div></div>'+
+      '<div class="palette-row" onclick="askPalette(\'withdrawal sequence £30000\')"><div>£</div><div>withdrawal sequence £30,000</div></div>'+
+      '<div class="palette-row" onclick="showApp(\'clients\');closePalette()"><div>◊</div><div>open clients list</div></div>'+
+      '<div class="palette-row" onclick="showApp(\'dashboard\');closePalette()"><div>◐</div><div>open dashboard</div></div>'+
+      '<div style="padding:10px 12px;font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.1em;text-transform:uppercase;border-top:1px dashed var(--line);margin-top:6px">or type any UK-finance question · returns T0 rules or T3 if key set</div>';
+    return;
+  }
+  body.innerHTML='<div class="palette-row" onclick="askPalette(\''+esc(q.replace(/\'/g,"\\'"))+'\')"><div>£</div><div>ask: '+esc(q.slice(0,80))+'</div></div>';
+}
+async function askPalette(q){
+  closePalette();
+  state.active='qa';
+  if(!state.chat)state.chat=[];
+  state.chat.push({role:'user',text:q});
+  await saveMeta();render();
+  $('#chat').innerHTML=renderChat()+'<div class="msg bot"><em style="color:var(--cream-muted)">thinking…</em></div>';
+  $('#chat').scrollTop=$('#chat').scrollHeight;
+  const ans=await answerQuestion(q);
+  state.chat.push({role:'bot',text:ans.text,src:ans.src});
+  await saveMeta();if(state.active==='qa'){$('#chat').innerHTML=renderChat();$('#chat').scrollTop=$('#chat').scrollHeight}
+}
+
+// ════════════════════════════════════════════════════════════════
+// KEYBOARD + click handlers
+// ════════════════════════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openPalette()}
+  if(e.key==='Escape'){closePalette();closeModal()}
+  if($('#palette')&&$('#palette').classList.contains('open')&&e.key==='Enter'){e.preventDefault();const q=$('#pInput').value.trim();if(q)askPalette(q)}
+});
+document.addEventListener('input',e=>{if(e.target.id==='pInput')renderPaletteSuggestions(e.target.value)});
+document.addEventListener('click',e=>{if(e.target.id==='palette')closePalette();if(e.target.id==='modal')closeModal()});
+
+// ════════════════════════════════════════════════════════════════
+// POSTMESSAGE API · for sibling tools + si-didy
+// ════════════════════════════════════════════════════════════════
+window.addEventListener('message',async e=>{
+  const m=e.data;if(!m||m.target!==TOOLNAME||!m.action)return;
+  let r=null;
+  if(m.action==='ping')r={ok:true,prime:PRIME,version:VERSION,taxYear:TAX_YEAR,firmId:state.firm&&state.firm.id};
+  else if(m.action==='ask'&&m.question){const a=await answerQuestion(m.question);r={ok:true,answer:a.text,src:a.src}}
+  else if(m.action==='get-client'&&m.clientId){r={ok:true,client:state.clients.find(c=>c.id===m.clientId)||null}}
+  else if(m.action==='list-clients')r={ok:true,clients:state.clients.filter(c=>!c.archivedAt)}
+  else if(m.action==='list-advisers')r={ok:true,advisers:state.advisers}
+  else if(m.action==='get-firm')r={ok:true,firm:state.firm}
+  else if(m.action==='get-tax'&&m.clientId){const c=state.clients.find(x=>x.id===m.clientId);r={ok:true,tax:totalTaxFor(c),rules:RULES}}
+  else if(m.action==='get-suggestions'&&m.clientId){const c=state.clients.find(x=>x.id===m.clientId);r={ok:true,suggestions:generateSuggestionsFor(c)}}
+  else if(m.action==='select-client'&&m.clientId){state.activeClientId=m.clientId;await saveMeta();render();r={ok:true}}
+  if(e.source)e.source.postMessage({target:m.source||'*',responseTo:m.action,data:r},'*');
+});
+
+// ── KONOMI sovereign tier (inert) ──
+window.KONOMI={active:true,tier:'sovereign',prime:PRIME,check:function(){return{ok:true,tier:'sovereign'}}};
+
+// ════════════════════════════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════════════════════════════
+(async function(){
+  await openDB();
+  await loadAllStores();
+  initMesh();
+  await updateTierBadge();
+  if(!state.active||!TABS.find(t=>t.id===state.active))state.active='dashboard';
+  render();
+})();
+
+</script>
+</body>
+</html>
