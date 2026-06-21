@@ -60,7 +60,7 @@ Primary: **IndexedDB** (`STORE='falladviser-v2'`, `DB_VERSION=2`) with stores:
 | `advisers` | id | many advisers |
 | `clients` | id | many clients (shared schema) |
 | `scenarios` | id | client scenarios |
-| `audit` | id | append-only Mansoor P3 extended audit chain |
+| `audit` | id | append-only P3 extended audit chain |
 | `settings` | keyed by 'app' / 'meta' | API keys, current adviser, filters, chat |
 
 Fallback: **localStorage** with keys prefixed `falladviser-v2::<store>`. Auto-engages if IDB unavailable (hostile sandbox, private mode).
@@ -107,7 +107,7 @@ Two channels:
 
 13 T0 deterministic patterns cover: ISA vs SIPP, CGT, marriage allowance, HICBC, carry-forward, tapered AA, BPR/APR, Scotland bands, state pension, 60% trap, personal savings allowance, Bed-and-ISA, withdrawal sequencing. T2 (Ollama local on 11434) and T3 (BYOK Claude / Gemini / GPT / OpenRouter) get full active-client context.
 
-### Audit chain (Mansoor P3 extended)
+### Audit chain (P3 extended)
 
 Every mutation to firm/adviser/client/scenario appends:
 
