@@ -23,11 +23,11 @@ Part of the IFA bundle: FallAdviser v2 · FallOnboard · FallPaper · FallPracti
 
 - **Multi-client / multi-adviser / multi-firm** per the shared IFA-bundle schema
 - **Scotland income tax bands** (starter 19% → top 48%)
-- **Marriage allowance** transfer (£1,260, basic-rate recipient)
-- **HICBC** with post-2024 taper £60k–£80k
-- **Tapered annual allowance** (£260k adjusted income, £10k floor)
+- **Marriage allowance** transfer (TBA, basic-rate recipient)
+- **HICBC** with post-2024 taper TBA
+- **Tapered annual allowance** (TBAk adjusted income, TBAk floor)
 - **Carry-forward** 3 prior tax years' unused AA
-- **BPR / APR** with post-2026 reform cap (£1m at 100%, then 50%)
+- **BPR / APR** with post-2026 reform cap (TBAm at 100%, then 50%)
 - **Personal savings allowance** + starting rate band for savings
 - **CGT lot tracking** with FIFO matching on disposal
 - **Bed-and-ISA** suggestion engine
@@ -80,19 +80,19 @@ Two channels:
 
 | function | purpose |
 |---|---|
-| `adjustedPersonalAllowance(income)` | PA taper £1/£2 over £100k |
+| `adjustedPersonalAllowance(income)` | PA taper TBA/TBA over TBAk |
 | `incomeTaxEngland(income, paAdj?)` | E/W/NI bands |
 | `incomeTaxScotland(income, paAdj?)` | starter/basic/intermediate/higher/advanced/top |
 | `nationalInsurance(income)` | Class 1 employee 8% / 2% |
 | `dividendTax(div, salary, region)` | allowance + 8.75/33.75/39.35% |
 | `capitalGainsTax(gain, salary)` | 18/24% post-October 2024 |
 | `savingsTax(int, salary, region)` | PSA + starting rate band |
-| `marriageAllowanceImpact(client)` | £1,260 transfer eligibility + impact |
-| `hicbcCharge(client)` | post-2024 £60k-£80k taper |
+| `marriageAllowanceImpact(client)` | TBA transfer eligibility + impact |
+| `hicbcCharge(client)` | post-2024 TBA taper |
 | `adjustedNetIncome(client)` | for PA taper + HICBC |
 | `thresholdIncome(client)` | pension taper test |
 | `adjustedIncomeForAA(client)` | pension taper test |
-| `taperedAA(client)` | £260k adj income, £10k floor |
+| `taperedAA(client)` | TBAk adj income, TBAk floor |
 | `carryForwardAA(client)` | 3 prior years unused |
 | `ihtEstimate(client)` | NRB + RNRB + BPR/APR cap |
 | `disposeFIFO(holding, units, price)` | CGT lot matching |
@@ -165,7 +165,7 @@ require('fs').writeFileSync('_engine.js',js);
 " && node -c _engine.js
 ```
 
-The verification suite that shipped with v2.0.0 confirmed: income tax @£50k = £7,486, @£100k = £27,432, 60% trap marginal = 0.60, Scotland @£50k = £9,028, tapered AA @£300k = £32,500, HICBC @£70k with £2,400 CB = £1,200, ATR scoring 1↔7, FIFO disposal 120u @£15 sale on 100-cost £10 + 50-cost £16 lots = £480 realised gain, IHT estate £1.1m with £200k BPR = £160,000 tax / £400k taxable.
+The verification suite that shipped with v2.0.0 confirmed: income tax @TBAk = TBA, @TBAk = TBA, 60% trap marginal = 0.60, Scotland @TBAk = TBA, tapered AA @TBAk = TBA, HICBC @TBAk with TBA CB = TBA, ATR scoring 1↔7, FIFO disposal 120u @TBA sale on 100-cost TBA + 50-cost TBA lots = TBA realised gain, IHT estate TBAm with TBAk BPR = TBA tax / TBAk taxable.
 
 ### License
 
