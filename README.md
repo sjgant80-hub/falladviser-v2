@@ -1,5 +1,7 @@
 # FallAdviser v2 · sovereign multi-client UK financial-advice tool
 
+**Live:** [sjgant80-hub.github.io/falladviser-v2](https://sjgant80-hub.github.io/falladviser-v2/)
+
 **One HTML file.** Multi-firm, multi-adviser, multi-client. Runs entirely in your browser. No server, no cloud, no telemetry. Client data never leaves the device.
 
 Part of the IFA bundle: FallAdviser v2 · FallOnboard · FallPaper · FallPractice. All four tools share a single client schema and exchange records over a `BroadcastChannel` mesh when open on the same device.
