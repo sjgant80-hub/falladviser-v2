@@ -238,19 +238,22 @@ tr.clickable:hover{background:var(--ink)}
     'llama-3b':  { id: 'Llama-3.2-3B-Instruct-q4f16_1-MLC',   size: '~2GB',   label: '3B · balanced · default · most laptops' },
     'qwen-7b':   { id: 'Qwen2.5-7B-Instruct-q4f16_1-MLC',     size: '~5GB',   label: '7B · capable · needs decent GPU (M-series Mac / 8GB+ VRAM)' },
     'llama-8b':  { id: 'Llama-3.1-8B-Instruct-q4f16_1-MLC',   size: '~5GB',   label: '8B · common · needs decent GPU' },
-    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' }};
+    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' },
+  };
   const DEFAULT_MODEL = 'llama-3b';
 
   const T3_PROVIDERS = {
     anthropic: { label: 'Anthropic Claude', models: ['claude-sonnet-4-5','claude-opus-4-7','claude-haiku-4-5'], default: 'claude-sonnet-4-5', url: 'https://api.anthropic.com/v1/messages' },
     openai:    { label: 'OpenAI',           models: ['gpt-4o','gpt-4o-mini','o1-mini'],                          default: 'gpt-4o-mini',      url: 'https://api.openai.com/v1/chat/completions' },
-    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' }};
+    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' },
+  };
 
   // ─── State ───────────────────────────────────────────────────────
   const STATE = {
     config: loadConfig(),
     ai: { ready: false, loading: false, progress: 0, engine: null, model: null },
-    mesh: { active: false, peers: new Map(), bc: null, signal: null }};
+    mesh: { active: false, peers: new Map(), bc: null, signal: null },
+  };
 
   function loadConfig() {
     try { return JSON.parse(localStorage.getItem('fall-kit.config') || '{}'); }
@@ -317,7 +320,8 @@ tr.clickable:hover{background:var(--ink)}
     if (tier === 'T2' && STATE.ai.ready && STATE.ai.engine) {
       const r = await STATE.ai.engine.chat.completions.create({
         messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userMsg }],
-        max_tokens: maxTokens});
+        max_tokens: maxTokens,
+      });
       return r.choices[0].message.content;
     }
     if (tier === 'T3' && STATE.config.api_key && STATE.config.api_provider) {
@@ -334,7 +338,8 @@ tr.clickable:hover{background:var(--ink)}
       const r = await fetch(T3_PROVIDERS.anthropic.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] })});
+        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] }),
+      });
       if (!r.ok) throw new Error('Anthropic ' + r.status + ': ' + (await r.text()).slice(0, 200));
       const j = await r.json();
       return j.content[0].text;
@@ -343,7 +348,8 @@ tr.clickable:hover{background:var(--ink)}
       const r = await fetch(T3_PROVIDERS.openai.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + key },
-        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] })});
+        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] }),
+      });
       if (!r.ok) throw new Error('OpenAI ' + r.status);
       const j = await r.json();
       return j.choices[0].message.content;
@@ -352,7 +358,8 @@ tr.clickable:hover{background:var(--ink)}
       const r = await fetch(T3_PROVIDERS.google.url + model + ':generateContent?key=' + encodeURIComponent(key), {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } })});
+        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } }),
+      });
       if (!r.ok) throw new Error('Google ' + r.status);
       const j = await r.json();
       return j.candidates[0].content.parts[0].text;
@@ -593,7 +600,8 @@ tr.clickable:hover{background:var(--ink)}
     openMint: openMint,  // v1.2 · launch kcc-mint with this seed prefilled as parent
     MODELS: WEBLLM_MODELS,
     PROVIDERS: T3_PROVIDERS,
-    state: STATE};
+    state: STATE,
+  };
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
@@ -664,7 +672,7 @@ tr.clickable:hover{background:var(--ink)}
  <div class="palette">
  <div class="palette-hd">
  <span class="glyph">£</span>
- <input type="text" id="pInput" placeholder="ask · 'CGT if Alice sells TBAk of VWRL · scenarios for Bob · marriage allowance · HICBC at TBAk'">
+ <input type="text" id="pInput" placeholder="ask · 'CGT if Alice sells £15k of VWRL · scenarios for Bob · marriage allowance · HICBC at £72k'">
  <span id="pTier" style="font-family:var(--mono);font-size:10px;color:var(--cream-muted)">T0</span>
  </div>
  <div class="palette-bd" id="pBody"></div>
@@ -1111,7 +1119,7 @@ function savingsTax(savingsInterest,salaryIncome,region){
  if(it.marginalRate<=0.20||salaryIncome<=RULES.higherRateStart)psa=RULES.savingsAllowanceBasic;
  else if(salaryIncome<=RULES.additionalRateStart)psa=RULES.savingsAllowanceHigher;
  else psa=RULES.savingsAllowanceAdditional;
- // Starting rate band: 0% on up to TBA of savings, tapered TBA per TBA by non-savings income above PA
+ // Starting rate band: 0% on up to £5,000 of savings, tapered £1 per £1 by non-savings income above PA
  const pa=adjustedPersonalAllowance(salaryIncome);
  const nonSavTaxable=Math.max(0,salaryIncome-pa);
  const startingBand=Math.max(0,RULES.savingsStartingRateBand-nonSavTaxable);
@@ -1169,17 +1177,17 @@ function marriageAllowanceImpact(c){
  const f=c.financials||{};
  if(!f.marriageAllowanceClaimed)return{eligible:false,impact:0,direction:f.marriageAllowanceDirection||'none'};
  if(f.marriageAllowanceDirection==='receiving'){
- // recipient: gets TBA extra PA equivalent → saves up to TBA (TBA × 20%)
+ // recipient: gets £1,260 extra PA equivalent → saves up to £252 (£1,260 × 20%)
  return{eligible:true,impact:RULES.marriageAllowance*RULES.basicRate,direction:'receiving',adjustedPA:adjustedPersonalAllowance(f.income)+RULES.marriageAllowance};
  }
  if(f.marriageAllowanceDirection==='transferring'){
- // transferor: loses TBA of PA — costs nothing if income < (PA - 1260)
+ // transferor: loses £1,260 of PA — costs nothing if income < (PA - 1260)
  return{eligible:true,impact:-RULES.marriageAllowance*RULES.basicRate,direction:'transferring',adjustedPA:Math.max(0,adjustedPersonalAllowance(f.income)-RULES.marriageAllowance)};
  }
  return{eligible:false,impact:0,direction:'none'};
 }
 
-// HICBC · post-2024 taper TBA, 1% per TBA over TBAk
+// HICBC · post-2024 taper £60k-£80k, 1% per £200 over £60k
 function hicbcCharge(c){
  if(!c)return{charge:0,childBenefit:0,adjustedNetIncome:0};
  const f=c.financials||{};
@@ -1253,7 +1261,7 @@ function ihtEstimate(c){
  if(!c)return{net:0,nrb:0,rnrb:0,bprRelief:0,aprRelief:0,taxable:0,tax:0};
  const f=c.financials||{};
  const totalAssets=(+f.mainHomeValue||0)+(+f.otherAssets||0)+(+f.bprAssets||0)+(+f.aprAssets||0)-(+f.liabilities||0)+(+f.giftsLast7Years||0);
- // BPR/APR combined cap (post-2026 reform): 100% on first TBAm, 50% on excess
+ // BPR/APR combined cap (post-2026 reform): 100% on first £1m, 50% on excess
  const bprAprCombined=(+f.bprAssets||0)+(+f.aprAssets||0);
  let bprAprRelief=0;
  if(bprAprCombined>0){
@@ -1519,22 +1527,22 @@ function generateSuggestionsFor(c){
  // Higher rate SIPP
  if((f.income||0)>RULES.higherRateStart){
  const r=t.marginalRate;
- out.push({prio:'high',title:'Higher-rate · SIPP gets '+pct(r)+' tax relief',why:'At '+pct(r)+' marginal rate, TBA net into pension reduces tax by '+money(1000*r/(1-r))+'. Claim higher-rate relief via SA.'});
+ out.push({prio:'high',title:'Higher-rate · SIPP gets '+pct(r)+' tax relief',why:'At '+pct(r)+' marginal rate, £1,000 net into pension reduces tax by '+money(1000*r/(1-r))+'. Claim higher-rate relief via SA.'});
  }
  // 60% trap
  if((f.income||0)>RULES.paTaperStart&&(f.income||0)<=RULES.paTaperEnd){
  const into=f.income-RULES.paTaperStart;
- out.push({prio:'high',title:'60% effective tax trap · '+money(into)+' in taper zone',why:'Pension contribution dropping adjusted income below TBAk recovers full PA. Effective benefit ~60%.'});
+ out.push({prio:'high',title:'60% effective tax trap · '+money(into)+' in taper zone',why:'Pension contribution dropping adjusted income below £100k recovers full PA. Effective benefit ~60%.'});
  }
  // Marriage allowance
  if(!f.marriageAllowanceClaimed&&(f.income||0)<RULES.personalAllowance&&(f.relationships||[]).length===0){
  // suggest if income below PA
- out.push({prio:'med',title:'Marriage allowance transfer · save spouse TBA',why:'Income '+money(f.income)+' is below £'+fmt(RULES.personalAllowance)+'. Transfer £'+fmt(RULES.marriageAllowance)+' of unused PA to basic-rate spouse.'});
+ out.push({prio:'med',title:'Marriage allowance transfer · save spouse £252/yr',why:'Income '+money(f.income)+' is below £'+fmt(RULES.personalAllowance)+'. Transfer £'+fmt(RULES.marriageAllowance)+' of unused PA to basic-rate spouse.'});
  }
  // HICBC
  const hi=hicbcCharge(c);
  if(hi.charge>0){
- out.push({prio:'high',title:'HICBC clawback · '+money(hi.charge)+' on child benefit',why:'Adjusted net income £'+fmt(hi.adjustedNetIncome)+' triggers '+(pct(hi.chargePct||0))+' clawback. Pension contribution reducing ANI to TBAk removes the charge entirely.'});
+ out.push({prio:'high',title:'HICBC clawback · '+money(hi.charge)+' on child benefit',why:'Adjusted net income £'+fmt(hi.adjustedNetIncome)+' triggers '+(pct(hi.chargePct||0))+' clawback. Pension contribution reducing ANI to £60k removes the charge entirely.'});
  }
  // Tapered AA
  const taa=taperedAA(c);
@@ -1623,7 +1631,7 @@ const T0_PATTERNS=[
  'Pension AA used: '+money(((c&&c.contribs&&c.contribs.sippThisYear)||0)+((c&&c.contribs&&c.contribs.workplacePensionAnnual)||0)+((c&&c.contribs&&c.contribs.salarySacrifice)||0))+' of '+money(taperedAA(c).aa);
  }},
  {match:/cgt|capital gains?/i,answer:(q,c)=>{
- const m=q.match(/£?(\d[\d]*)/);const sale=m?parseInt(m[1].replace(/,/g,'')):0;
+ const m=q.match(/£?(\d[\d,]*)/);const sale=m?parseInt(m[1].replace(/,/g,'')):0;
  const ct=capitalGainsTax(sale||((c&&c.gains&&c.gains.cgtRealisedThisYear)||0),(c&&c.financials&&c.financials.income)||0);
  return '**CGT for '+TAX_YEAR+':**\n'+
  '- Annual allowance: '+money(RULES.cgtAllowance)+'\n'+
@@ -1637,7 +1645,7 @@ const T0_PATTERNS=[
  '- Transferable amount: £'+fmt(RULES.marriageAllowance)+' of unused PA\n'+
  '- Recipient must be basic-rate (income < £'+fmt(RULES.higherRateStart)+')\n'+
  '- Transferor must have income < £'+fmt(RULES.personalAllowance-RULES.marriageAllowance)+' for zero-cost transfer\n'+
- '- Annual saving: up to **TBA** (TBA × 20%)\n'+
+ '- Annual saving: up to **£252** (£1,260 × 20%)\n'+
  '- Backdate: 4 prior tax years (so currently to 2021-22)\n\n'+
  ((c&&clientName(c)+' income: '+money(f.income||0)+'.'))+
  ((f.income||0)<RULES.personalAllowance?' Eligible to transfer.':((f.income||0)<RULES.higherRateStart?' Eligible to receive if spouse has unused PA.':' Not eligible (above basic rate).'));
@@ -1646,13 +1654,13 @@ const T0_PATTERNS=[
  const hi=hicbcCharge(c);
  return '**HICBC · post-2024 reform · '+TAX_YEAR+':**\n'+
  '- Taper zone: £'+fmt(RULES.hicbcStart)+' – £'+fmt(RULES.hicbcEnd)+' adjusted net income\n'+
- '- Charge: 1% of child benefit per TBA over TBAk (100% at TBAk)\n'+
+ '- Charge: 1% of child benefit per £200 over £60k (100% at £80k)\n'+
  '- First child: £'+RULES.childBenefitFirst+'/wk · subsequent: £'+RULES.childBenefitOther+'/wk\n\n'+
  (c?'For '+clientName(c)+':\n'+
  '- Adjusted net income: '+money(hi.adjustedNetIncome)+'\n'+
  '- Child benefit received: '+money(hi.childBenefit)+'/yr\n'+
  '- **HICBC charge: '+money(hi.charge)+'**\n\n'+
- (hi.charge>0?'**Fix:** pension contribution dropping ANI below TBAk removes the charge entirely. TBA of pension contribution avoids TBA of clawback (effective rate ~50-70% at upper end of taper).':'No HICBC charge applies.'):'No active client.');
+ (hi.charge>0?'**Fix:** pension contribution dropping ANI below £60k removes the charge entirely. £1 of pension contribution avoids £1 of clawback (effective rate ~50-70% at upper end of taper).':'No HICBC charge applies.'):'No active client.');
  }},
  {match:/carry.forward|carry forward|prior.year.*aa/i,answer:(q,c)=>{
  const cf=carryForwardAA(c);
@@ -1671,8 +1679,8 @@ const T0_PATTERNS=[
  const t=taperedAA(c);
  return '**Tapered annual allowance · '+TAX_YEAR+':**\n'+
  '- Trigger: threshold income > £'+fmt(RULES.pensionThresholdIncome)+' AND adjusted income > £'+fmt(RULES.pensionAATaperStart)+'\n'+
- '- Reduction: TBA per TBA of adjusted income over TBAk\n'+
- '- Floor: £'+fmt(RULES.pensionAATaperFloor)+' AA minimum (at adjusted income ≥ TBAk)\n\n'+
+ '- Reduction: £1 per £2 of adjusted income over £260k\n'+
+ '- Floor: £'+fmt(RULES.pensionAATaperFloor)+' AA minimum (at adjusted income ≥ £360k)\n\n'+
  (c?'For '+clientName(c)+':\n'+
  '- Threshold income: '+money(t.thresholdIncome)+'\n'+
  '- Adjusted income: '+money(t.adjustedIncome)+'\n'+
@@ -1715,20 +1723,20 @@ const T0_PATTERNS=[
  const inZone=inc>RULES.paTaperStart&&inc<=RULES.paTaperEnd;
  return '**Personal Allowance taper · '+TAX_YEAR+':**\n'+
  '- Full PA: '+money(RULES.personalAllowance)+'\n'+
- '- Reduces TBA per TBA over £'+fmt(RULES.paTaperStart)+'\n'+
+ '- Reduces £1 per £2 over £'+fmt(RULES.paTaperStart)+'\n'+
  '- Gone at £'+fmt(RULES.paTaperEnd)+'\n\n'+
  (c?clientName(c)+'\'s PA: **'+money(pa)+'**\n':'')+
- (inZone?'\n⚠ IN the 60% trap. Pension contribution dropping ANI below TBAk recovers full PA and gets 40% relief on contribution → ~60% effective benefit.':'');
+ (inZone?'\n⚠ IN the 60% trap. Pension contribution dropping ANI below £100k recovers full PA and gets 40% relief on contribution → ~60% effective benefit.':'');
  }},
  {match:/savings|psa|personal savings allowance|starting rate/i,answer:(q,c)=>{
  const inc=((c&&c.financials&&c.financials.income)||0);
  return '**Personal savings allowance (PSA) · starting rate band · '+TAX_YEAR+':**\n'+
  '- Basic-rate taxpayer: '+money(RULES.savingsAllowanceBasic)+' PSA\n'+
  '- Higher-rate: '+money(RULES.savingsAllowanceHigher)+'\n'+
- '- Additional-rate: TBA\n'+
- '- **Starting rate band:** 0% on up to '+money(RULES.savingsStartingRateBand)+' of savings · tapered TBA:TBA by non-savings income over PA\n\n'+
+ '- Additional-rate: £0\n'+
+ '- **Starting rate band:** 0% on up to '+money(RULES.savingsStartingRateBand)+' of savings · tapered £1:£1 by non-savings income over PA\n\n'+
  (c?clientName(c)+' · income '+money(inc)+'. ':'')+
- 'If non-savings income ≥ PA + TBAk, the starting rate band is exhausted. Cash ISA shelters any further savings interest.';
+ 'If non-savings income ≥ PA + £5k, the starting rate band is exhausted. Cash ISA shelters any further savings interest.';
  }},
  {match:/bed.{0,3}isa|bed and isa/i,answer:(q,c)=>{
  const bi=bedAndIsaSuggestions(c);
@@ -1739,7 +1747,7 @@ const T0_PATTERNS=[
  (c&&bi.length?'For '+clientName(c)+':\n'+bi.map(x=>'- '+x.holding+': move '+money(x.moveAmount)+' · gain '+money(x.moveGain)+' · CGT impact '+money(x.cgtImpact)).join('\n'):'No Bed & ISA candidates for active client.');
  }},
  {match:/withdraw|drawdown.*order|sequencing|retirement income.*order/i,answer:(q,c)=>{
- const m=q.match(/£?(\d[\d]*)/);const need=m?parseInt(m[1].replace(/,/g,'')):24000;
+ const m=q.match(/£?(\d[\d,]*)/);const need=m?parseInt(m[1].replace(/,/g,'')):24000;
  const seq=withdrawalSequence(c,need);
  return '**Tax-aware withdrawal sequence · target '+money(need)+'/yr:**\n\n'+
  (seq.steps.length?seq.steps.map((s,i)=>(i+1)+'. **'+s.source+'** · gross '+money(s.gross)+' · tax '+money(s.tax)+' · net '+money(s.net)+'\n _'+s.note+'_').join('\n\n'):'No steps generated — no holdings recorded for active client.')+
@@ -1756,24 +1764,24 @@ async function answerQuestion(q){
  const ctx=buildContext(c);
  const sys='You are FallAdviser v2, a sovereign multi-client UK financial-advice tool used by an IFA firm. **You are informational only — not regulated FCA advice.** Always say so.\n\n'+
  'UK '+TAX_YEAR+' rules:\n'+
- '- PA £'+fmt(RULES.personalAllowance)+' (taper TBA/TBA above TBAk, gone at TBA)\n'+
- '- Income tax E/W/NI: 20% to TBA · 40% to TBA · 45% above\n'+
+ '- PA £'+fmt(RULES.personalAllowance)+' (taper £1/£2 above £100k, gone at £125,140)\n'+
+ '- Income tax E/W/NI: 20% to £50,270 · 40% to £125,140 · 45% above\n'+
  '- Scotland: starter 19% · basic 20% · inter 21% · higher 42% · advanced 45% · top 48%\n'+
- '- NI: 8% TBA-TBA · 2% above\n'+
+ '- NI: 8% £12,570-£50,270 · 2% above\n'+
  '- Dividend allowance £'+fmt(RULES.dividendAllowance)+' · 8.75/33.75/39.35%\n'+
  '- CGT allowance £'+fmt(RULES.cgtAllowance)+' · 18/24%\n'+
  '- ISA £'+fmt(RULES.isaAllowance)+' (LISA £'+fmt(RULES.lisaAllowance)+' sub)\n'+
- '- Pension AA £'+fmt(RULES.pensionAnnualAllowance)+' (tapered above TBAk adjusted, floor TBAk)\n'+
+ '- Pension AA £'+fmt(RULES.pensionAnnualAllowance)+' (tapered above £260k adjusted, floor £10k)\n'+
  '- Carry-forward 3 years · MPAA £'+fmt(RULES.mpaa)+'\n'+
  '- Marriage allowance £'+fmt(RULES.marriageAllowance)+' (recipient must be basic rate)\n'+
- '- HICBC tapered TBA (post-2024 reform)\n'+
- '- BPR/APR post-2026: 100% to TBAm, 50% above\n'+
+ '- HICBC tapered £60k-£80k (post-2024 reform)\n'+
+ '- BPR/APR post-2026: 100% to £1m, 50% above\n'+
  '- State pension '+money(RULES.statePensionAnnual)+'/yr · 35 NI years\n\n'+
  'Active client context:\n'+ctx+'\n\nBe concrete · cite £ amounts using their numbers · UK terms · short paragraphs · end with "Verify with HMRC or an authorised adviser before acting."';
  const r=await Cascade.generate(sys,q,1400);
  if(r.text)return{src:r.tier,text:r.text};
  }
- return{src:'T0 · fallback',text:'Try: "ISA vs SIPP" · "CGT on TBAk" · "HICBC" · "marriage allowance" · "carry-forward" · "tapered AA" · "BPR APR" · "Scotland bands" · "bed and ISA" · "withdrawal sequence TBAk" · "60% trap" · "state pension"'};
+ return{src:'T0 · fallback',text:'Try: "ISA vs SIPP" · "CGT on £15k" · "HICBC" · "marriage allowance" · "carry-forward" · "tapered AA" · "BPR APR" · "Scotland bands" · "bed and ISA" · "withdrawal sequence £30k" · "60% trap" · "state pension"'};
 }
 
 function buildContext(c){
@@ -2102,7 +2110,7 @@ function viewProfile(){
  '<div class="field"><label>Y-3 (£)</label><input id="f_cf3" type="number" value="'+((f.carryForward||[])[2]||0)+'"></div></div>'+
  '</div>'+
  '<div class="card"><h3>family + benefits</h3>'+
- '<div class="row"><div class="field"><label>marriage allowance</label><select id="f_madir"><option value="none"'+(f.marriageAllowanceDirection==='none'||!f.marriageAllowanceDirection?' selected':'')+'>none</option><option value="transferring"'+(f.marriageAllowanceDirection==='transferring'?' selected':'')+'>transferring (TBA → spouse)</option><option value="receiving"'+(f.marriageAllowanceDirection==='receiving'?' selected':'')+'>receiving (+TBA PA)</option></select></div>'+
+ '<div class="row"><div class="field"><label>marriage allowance</label><select id="f_madir"><option value="none"'+(f.marriageAllowanceDirection==='none'||!f.marriageAllowanceDirection?' selected':'')+'>none</option><option value="transferring"'+(f.marriageAllowanceDirection==='transferring'?' selected':'')+'>transferring (£1,260 → spouse)</option><option value="receiving"'+(f.marriageAllowanceDirection==='receiving'?' selected':'')+'>receiving (+£1,260 PA)</option></select></div>'+
  '<div class="field"><label><input type="checkbox" id="f_maclaim" '+(f.marriageAllowanceClaimed?'checked':'')+'> claimed</label></div></div>'+
  '<div class="row"><div class="field"><label>children claiming CB</label><input id="f_nch" type="number" min="0" max="20" value="'+(f.numChildren||0)+'"></div>'+
  '<div class="field"><label>child benefit £/yr (received)</label><input id="f_cb" type="number" value="'+(f.childBenefitClaimed||0)+'"></div></div>'+
@@ -2123,7 +2131,7 @@ function viewProfile(){
  '<div class="field"><label>APR-qualifying (£)</label><input id="f_apr" type="number" value="'+(f.aprAssets||0)+'"></div></div>'+
  '<div class="row"><div class="field"><label>liabilities (£)</label><input id="f_liab" type="number" value="'+(f.liabilities||0)+'"></div>'+
  '<div class="field"><label>gifts last 7 years (£)</label><input id="f_g7" type="number" value="'+(f.giftsLast7Years||0)+'"></div></div>'+
- '<div class="field hint">Post-2026: BPR + APR combined capped TBAm at 100% relief, then 50% above</div>'+
+ '<div class="field hint">Post-2026: BPR + APR combined capped £1m at 100% relief, then 50% above</div>'+
  '</div>'+
  '<div class="card"><h3>lifestyle</h3>'+
  '<div class="row"><div class="field"><label>monthly essentials (£)</label><input id="f_mex" type="number" value="'+(f.monthlyExpenses||0)+'"></div>'+
@@ -2176,7 +2184,7 @@ function viewTax(){
  '<div class="grid">'+
  '<div class="card"><h3>income tax bands <span class="meta">'+t.region+'</span></h3>'+
  '<table><tr><th>band</th><th class="r">amount</th><th class="r">tax</th></tr>'+
- '<tr><td>Personal allowance</td><td class="r">'+money(t.paUsed)+'</td><td class="r">TBA</td></tr>'+
+ '<tr><td>Personal allowance</td><td class="r">'+money(t.paUsed)+'</td><td class="r">£0</td></tr>'+
  t.bands.map(b=>'<tr><td>'+esc(b.label)+'</td><td class="r">'+money(b.amount)+'</td><td class="r">'+money(b.tax)+'</td></tr>').join('')+
  '<tr class="total"><td>Income tax total</td><td class="r">'+money((f.income||0)-t.paUsed)+'</td><td class="r">'+money(t.incomeTax)+'</td></tr></table>'+
  '<div style="margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--cream-muted)">marginal '+pct(t.marginalRate)+' '+((f.income||0)>RULES.paTaperStart&&(f.income||0)<=RULES.paTaperEnd?'<span class="tag red">60% trap</span>':'')+'</div>'+
@@ -2216,7 +2224,7 @@ function viewTax(){
  '<div class="kpi"><span class="l">Child benefit received</span><span class="v">'+money(hi.childBenefit)+'/yr</span></div>'+
  '<div class="kpi"><span class="l">Charge %</span><span class="v amber">'+pct(hi.chargePct||0)+'</span></div>'+
  '<div class="kpi"><span class="l">Charge £</span><span class="v red">'+money(hi.charge)+'</span></div>'+
- '<div style="margin-top:8px;font-size:11px;color:var(--cream-dim)">A pension contribution that drops ANI below TBAk removes the charge entirely.</div></div>':'')+
+ '<div style="margin-top:8px;font-size:11px;color:var(--cream-dim)">A pension contribution that drops ANI below £60k removes the charge entirely.</div></div>':'')+
  (ma.eligible?'<div class="card"><h3>marriage allowance</h3>'+
  '<div class="kpi"><span class="l">Direction</span><span class="v">'+ma.direction+'</span></div>'+
  '<div class="kpi"><span class="l">Annual impact</span><span class="v '+(t.marriageAllowance<0?'green':'red')+'">'+(t.marriageAllowance<0?'-':'+')+money(Math.abs(t.marriageAllowance))+'</span></div>'+
@@ -2589,7 +2597,7 @@ async function presetScenario(kind){
  if(kind==='retire60'){snap.profile.targetRetirementAge=60;name='Retire at 60'}
  else if(kind==='retire67'){snap.profile.targetRetirementAge=67;name='Retire at 67'}
  else if(kind==='retire70'){snap.profile.targetRetirementAge=70;name='Retire at 70'}
- else if(kind==='downsize'){snap.profile.mainHomeValue=Math.max(0,(snap.profile.mainHomeValue||0)-150000);snap.profile.otherAssets=(snap.profile.otherAssets||0)+150000;name='Downsize property (TBAk released)'}
+ else if(kind==='downsize'){snap.profile.mainHomeValue=Math.max(0,(snap.profile.mainHomeValue||0)-150000);snap.profile.otherAssets=(snap.profile.otherAssets||0)+150000;name='Downsize property (£150k released)'}
  else if(kind==='maxsipp'){const cfTotal=(snap.profile.carryForward||[0,0,0]).reduce((s,x)=>s+x,0);snap.contribs.sippThisYear=Math.min(60000+cfTotal,(snap.profile.income||0));name='Max SIPP with carry-forward'}
  const sc={id:'sc_'+uid(),clientId:c.id,name,createdAt:Date.now(),updatedAt:Date.now(),snapshot:snap};
  await saveScenario(sc,'Preset scenario created · '+kind);
@@ -2668,14 +2676,14 @@ function viewQA(){
  $('#view').innerHTML='<div class="section-h"><div><h2>Q &amp; A</h2><div class="sub">'+(c?'context · '+esc(clientName(c)):'no active client')+' · T0 deterministic · T3 optional</div></div><div class="actions"><button class="btn sm" onclick="state.chat=[];saveMeta();viewQA()">clear</button></div></div>'+
  '<div class="card">'+
  '<div class="chat" id="chat">'+renderChat()+'</div>'+
- '<div class="chat-input"><input id="qInput" placeholder="ask · ISA vs SIPP · CGT on TBAk · HICBC · marriage allowance · tapered AA · Scotland bands · Bed&amp;ISA · withdrawal sequence TBAk"><button class="btn primary" onclick="askQuestion()">ask</button></div>'+
- '<div style="margin-top:10px;font-size:11px;color:var(--cream-muted);font-family:var(--mono)">try: "marriage allowance" · "HICBC" · "tapered AA" · "carry-forward" · "BPR" · "Scotland tax bands" · "bed and ISA" · "withdrawal sequence TBAk"</div>'+
+ '<div class="chat-input"><input id="qInput" placeholder="ask · ISA vs SIPP · CGT on £15k · HICBC · marriage allowance · tapered AA · Scotland bands · Bed&amp;ISA · withdrawal sequence £30k"><button class="btn primary" onclick="askQuestion()">ask</button></div>'+
+ '<div style="margin-top:10px;font-size:11px;color:var(--cream-muted);font-family:var(--mono)">try: "marriage allowance" · "HICBC" · "tapered AA" · "carry-forward" · "BPR" · "Scotland tax bands" · "bed and ISA" · "withdrawal sequence £30k"</div>'+
  '</div>';
  const q=$('#qInput');if(q)q.addEventListener('keydown',e=>{if(e.key==='Enter')askQuestion()});
 }
 function renderChat(){
  if(!state.chat.length)return '<div style="text-align:center;padding:30px;color:var(--cream-muted);font-style:italic">No questions yet. Ask anything about UK finances or the active client.</div>';
- return state.chat.map(m=>'<div class="msg '+m.role+'">'+esc(m.text).replace(/\*\*(.+?)\*\*/g,'<strong>TBA</strong>').replace(/\n/g,'<br>')+(m.src?'<div class="src">'+esc(m.src)+'</div>':'')+'</div>').join('');
+ return state.chat.map(m=>'<div class="msg '+m.role+'">'+esc(m.text).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')+(m.src?'<div class="src">'+esc(m.src)+'</div>':'')+'</div>').join('');
 }
 async function askQuestion(){
  const q=$('#qInput').value.trim();if(!q)return;
@@ -3005,7 +3013,7 @@ function renderPaletteSuggestions(q){
  '<div class="palette-row" onclick="askPalette(\'BPR APR post-2026\')"><div>£</div><div>BPR / APR post-2026 reform</div></div>'+
  '<div class="palette-row" onclick="askPalette(\'Scotland tax bands\')"><div>£</div><div>Scotland tax bands</div></div>'+
  '<div class="palette-row" onclick="askPalette(\'bed and ISA opportunities\')"><div>£</div><div>Bed &amp; ISA opportunities</div></div>'+
- '<div class="palette-row" onclick="askPalette(\'withdrawal sequence TBA00\')"><div>£</div><div>withdrawal sequence TBA</div></div>'+
+ '<div class="palette-row" onclick="askPalette(\'withdrawal sequence £30000\')"><div>£</div><div>withdrawal sequence £30,000</div></div>'+
  '<div class="palette-row" onclick="showApp(\'clients\');closePalette()"><div>◊</div><div>open clients list</div></div>'+
  '<div class="palette-row" onclick="showApp(\'dashboard\');closePalette()"><div>◐</div><div>open dashboard</div></div>'+
  '<div style="padding:10px 12px;font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.1em;text-transform:uppercase;border-top:1px dashed var(--line);margin-top:6px">or type any UK-finance question · returns T0 rules or T3 if key set</div>';
